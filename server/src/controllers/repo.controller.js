@@ -12,7 +12,6 @@ const generateDocumentation = async (req, res, next) => {
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
     const repoData = await githubService.getRepoData(owner, repoName);
-    console.log(repoData)
 
     if (!repoData) {
       return next(errorHandler(404, "Repository not found"));
@@ -25,10 +24,10 @@ const generateDocumentation = async (req, res, next) => {
     );
 
     // Convert README (Markdown) to HTML
-    const readmeHtml = markdownService.convertMarkdownToHTML(readmeContent);
+    const readmeHtml = await markdownService.convertMarkdownToHTML(readmeContent);
 
     // Generate PDF
-    const pdf = pdfGenerator.generatePDF(readmeHtml);
+    const pdf = await pdfGenerator.generatePDF(readmeHtml);
 
     // Return the PDF or HTML as response
     res.setHeader("Content-Type", "application/pdf");
