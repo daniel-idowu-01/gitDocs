@@ -28,7 +28,7 @@ const generateDocumentation = async (req, res, next) => {
       ""
     );
 
-    console.log('repoContent', repoContent)
+    console.log(repoContent, 'repoContent')
 
     // Convert repo (Markdown) to HTML
     const repoHtml = await markdownService.convertMarkdownToHTML(repoContent);
