@@ -17,17 +17,24 @@ const generateDocumentation = async (req, res, next) => {
       return next(errorHandler(404, "Repository not found"));
     }
 
-    const readmeContent = await githubService.getFileContent(
+    // const rateLimit = await githubService.checkRateLimit(
+    //   process.env.GITHUB_TOKEN
+    // );
+    // console.log(rateLimit)
+
+    const repoContent = await githubService.getFileContent(
       owner,
       repoName,
-      "client/README.md"
+      ""
     );
 
-    // Convert README (Markdown) to HTML
-    const readmeHtml = await markdownService.convertMarkdownToHTML(readmeContent);
+    console.log('repoContent', repoContent)
+
+    // Convert repo (Markdown) to HTML
+    const repoHtml = await markdownService.convertMarkdownToHTML(repoContent);
 
     // Generate PDF
-    const pdf = await pdfGenerator.generatePDF(readmeHtml);
+    const pdf = await pdfGenerator.generatePDF(repoHtml);
 
     // Return the PDF or HTML as response
     res.setHeader("Content-Type", "application/pdf");

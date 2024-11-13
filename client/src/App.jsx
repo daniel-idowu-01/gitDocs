@@ -1,19 +1,26 @@
 import { useState, useEffect } from "react";
+import { validateGithubUrl } from "./utils/helpers";
 
 function App() {
-  const [githubLink, setGithubLink] = useState("");
+  const [repoUrl, setRepoUrl] = useState("");
 
   // Handle form submission
-  const handleGithubLink = (e) => {
+  const handleRepoUrl = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:3000/repo", {
+    const result = validateGithubUrl(repoUrl);
+
+    if (!result.valid) {
+      alert("URL not valid");
+    }
+
+    fetch("http://localhost:3000/api/docs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        githubUrl: githubLink,
+        repoUrl,
       }),
     })
       .then((response) => {
@@ -34,12 +41,17 @@ function App() {
     <div>
       <input
         type="text"
-        placeholder="GitHub link"
-        className="border-2 text-black m-20 px-3 py-2 w-80"
-        value={githubLink} // Make input controlled by state
-        onChange={(e) => setGithubLink(e.target.value)} // Update state on change
+        placeholder="Repo link"
+        className="border-2 text-black m-20 mr-0 px-3 py-2 w-80"
+        value={repoUrl}
+        onChange={(e) => setRepoUrl(e.target.value)}
       />
-      <button onClick={handleGithubLink}>Submit</button>
+      <button
+        onClick={handleRepoUrl}
+        className="bordeer bg-red-500 w-20 text-white p-3"
+      >
+        Submit
+      </button>
     </div>
   );
 }

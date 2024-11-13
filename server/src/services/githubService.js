@@ -19,7 +19,11 @@ export default class GithubService {
     try {
       const repoData = await axios.get(
         `https://api.github.com/repos/${owner}/${repoName}`,
-        { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+        {
+          headers: {
+            Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          },
+        }
       );
       return repoData.data;
     } catch (error) {
@@ -31,16 +35,68 @@ export default class GithubService {
   async getFileContent(owner, repoName, filePath) {
     try {
       const fileData = await axios.get(
-        `https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`
+        `https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`,
+        {
+          headers: {
+            Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          },
+        }
       );
-      // Decode Base64 content
-      const content = Buffer.from(fileData.data.content, "base64").toString(
-        "utf8"
-      );
-      return content;
+  
+      // Handle the directory listing
+      if (Array.isArray(fileData.data)) {
+        const directoryContents = [];
+        // Iterate through the directory contents
+        for (const item of fileData.data) {
+          if (item.type === "file") {
+            console.log(`File: ${item.path}`);
+            const content = await this.getFileContent(owner, repoName, item.path);
+            if (content) {
+              directoryContents.push({ filePath: item.path, content });
+            } else {
+              console.log(`No content for file: ${item.path}`);
+            }
+          } else if (item.type === "dir") {
+            console.log(`Directory: ${item.path}`);
+            // Recursively process directories
+            const dirContents = await this.getFileContent(owner, repoName, item.path);
+            if (dirContents && dirContents.length > 0) {
+              directoryContents.push(...dirContents); // Add sub-directory contents to the list
+            }
+          }
+        }
+        // Log and return directory contents
+        console.log(`Directory contents: ${JSON.stringify(directoryContents)}`);
+        return directoryContents;
+      } else if (fileData.data.type === "file") {
+        if (fileData.data.content) {
+          const content = Buffer.from(fileData.data.content, "base64").toString("utf8");
+          console.log(`Content of file ${filePath}:`, content);
+          return content;
+        } else {
+          console.log(`Warning: No content available for ${filePath}`);
+          return null;
+        }
+      }
     } catch (error) {
-      console.error("Error fetching file content:", error);
+      // Catch and log any errors
+      console.error(`Error fetching content from ${filePath}:`, error);
       return null;
+    }
+  }
+  
+
+  async checkRateLimit(token) {
+    try {
+      const response = await axios.get("https://api.github.com/rate_limit", {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      });
+      console.log("Rate limit:", response.data.rate.limit);
+      console.log("Remaining requests:", response.data.rate.remaining);
+    } catch (error) {
+      console.error("Error checking rate limit:", error);
     }
   }
 }
