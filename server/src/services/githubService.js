@@ -44,12 +44,15 @@ export default class GithubService {
         ".svg",
         ".bmp",
         ".tiff",
+        ".ico"
       ];
+      const skippedFiles = ["package-lock.json", ".gitignore"];
       const skippedDirs = ["node_modules", "images", "assets", ".git"];
 
       // Skip if the file path matches any of the skipped extensions or directories
       if (
         skippedExtensions.some((ext) => filePath.endsWith(ext)) ||
+        skippedFiles.some((file) => filePath.endsWith(file)) ||
         skippedDirs.some((dir) => filePath.includes(dir))
       ) {
         console.log(`Skipping file or directory: ${filePath}`);
@@ -71,6 +74,7 @@ export default class GithubService {
         for (const item of fileData.data) {
           if (
             skippedExtensions.some((ext) => item.path.endsWith(ext)) ||
+            skippedFiles.some(file => item.path.endsWith(file)) ||
             skippedDirs.some((dir) => item.path.includes(dir))
           ) {
             console.log(`Skipping: ${item.path}`);
