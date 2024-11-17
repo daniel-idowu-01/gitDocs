@@ -1,22 +1,36 @@
-import { jsPDF } from "jspdf";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import PDFDocument from 'pdfkit';
+import fs from 'fs';
 
 export default class PdfGenerator {
   constructor() {}
 
-  async generatePDF(docContent) {
-    const doc = new jsPDF();
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    
-    doc.text(docContent, 10, 10);
-    // doc.save("documentation.pdf"); // client side
-
-    // Save PDF to a specific location on the server's filesystem
-    const filePath = path.join(__dirname, "document.pdf");
-    const pdfOutput = doc.output();
-
-    fs.writeFileSync(filePath, pdfOutput); 
+  async generatePDF(fullDocumentation) {
+    try {
+      const doc = new PDFDocument();
+      
+      doc.pipe(fs.createWriteStream('documentation.pdf'));
+      
+      // Add title
+      doc.fontSize(20)
+         .text('Project Documentation', {
+           align: 'center'
+         })
+         .moveDown(2);
+      
+      // Add content with some formatting
+      doc.fontSize(12)
+         .text(fullDocumentation, {
+           align: 'left',
+           lineGap: 5
+         });
+      
+      // Finalize the PDF
+      doc.end();
+      
+      console.log('PDF generated successfully');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   }
+  
 }

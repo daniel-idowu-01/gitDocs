@@ -24,6 +24,7 @@
     "mongoose": "^8.8.1",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.7",
+    "pdfkit": "^0.15.1",
     "regex-validate": "^1.0.6"
   }
 }

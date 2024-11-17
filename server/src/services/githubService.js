@@ -44,9 +44,10 @@ export default class GithubService {
         ".svg",
         ".bmp",
         ".tiff",
-        ".ico"
+        ".ico",
+        '.css'
       ];
-      const skippedFiles = ["package-lock.json", ".gitignore"];
+      const skippedFiles = ["package-lock.json", ".gitignore", ".eslintrc.json"];
       const skippedDirs = ["node_modules", "images", "assets", ".git"];
 
       // Skip if the file path matches any of the skipped extensions or directories
@@ -77,12 +78,10 @@ export default class GithubService {
             skippedFiles.some(file => item.path.endsWith(file)) ||
             skippedDirs.some((dir) => item.path.includes(dir))
           ) {
-            console.log(`Skipping: ${item.path}`);
             continue;
           }
 
           if (item.type === "file") {
-            console.log(`File: ${item.path}`);
             const content = await this.getFileContent(
               owner,
               repoName,
@@ -94,7 +93,6 @@ export default class GithubService {
               console.log(`No content for file: ${item.path}`);
             }
           } else if (item.type === "dir") {
-            console.log(`Directory: ${item.path}`);
             const dirContents = await this.getFileContent(
               owner,
               repoName,
@@ -105,18 +103,15 @@ export default class GithubService {
             }
           }
         }
-        // Log and return directory contents
-        console.log(`Directory contents: ${JSON.stringify(directoryContents)}`);
+        
         return directoryContents;
       } else if (fileData.data.type === "file") {
         if (fileData.data.content) {
           const content = Buffer.from(fileData.data.content, "base64").toString(
             "utf8"
           );
-          console.log(`Content of file ${filePath}:`, content);
           return content;
         } else {
-          console.log(`Warning: No content available for ${filePath}`);
           return null;
         }
       }
@@ -134,8 +129,6 @@ export default class GithubService {
           Authorization: `token ${token}`,
         },
       });
-      console.log("Rate limit:", response.data.rate.limit);
-      console.log("Remaining requests:", response.data.rate.remaining);
     } catch (error) {
       console.error("Error checking rate limit:", error);
     }
