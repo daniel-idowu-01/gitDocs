@@ -5,15 +5,18 @@ import {
   pdfGenerator,
   aiService,
 } from "../services/index.js";
+import { Repository, Documentation } from "../models/index.js";
 
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 const generateDocumentation = async (req, res, next) => {
-  const { repoUrl } = req.body;
+  let repository, documentation;
 
   try {
+    let userId = req.user.id;
+    const { repoUrl } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
     const repoData = await githubService.getRepoData(owner, repoName);
@@ -28,11 +31,6 @@ const generateDocumentation = async (req, res, next) => {
     // console.log(rateLimit)
 
     const repoContent = await githubService.getFileContent(owner, repoName, "");
-    console.log("repoContent", repoContent);
-
-    console.log(
-      "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    );
 
     let fullDocumentation = "";
     for (const content of repoContent) {
@@ -60,7 +58,16 @@ const generateDocumentation = async (req, res, next) => {
       }
     }
 
-    console.log("fullDocumentation", fullDocumentation);
+    repository = await Repository.create({
+      userId,
+      repoName,
+      repoUrl,
+    });
+
+    documentation = await Documentation.create({
+      repoId: repository._id,
+      content: fullDocumentation
+    })
 
     // Convert repo (Markdown) to HTML
     //const repoHtml = await markdownService.convertMarkdownToHTML(fullDocumentation);

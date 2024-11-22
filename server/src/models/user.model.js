@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
+    roleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
+    },
     googleId: {
       type: String,
     },

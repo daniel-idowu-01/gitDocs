@@ -4,6 +4,6 @@ import { generateDocumentation } from "../controllers/repo.controller.js";
 
 const router = expressRouter();
 
-router.post("/", generateDocumentation);
+router.post("/", authToken, generateDocumentation);
 
 export default router;

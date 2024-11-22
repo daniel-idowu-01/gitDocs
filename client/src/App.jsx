@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { validateGithubUrl } from "./utils/helpers";
+import { Button } from "@/components/ui/button";
 
 function App() {
   const [repoUrl, setRepoUrl] = useState("");
@@ -114,13 +115,16 @@ function App() {
           </div>
         </div>
       </main>
+
+      <Button>Click me</Button>
     </div>
   );
 }
 
 export default App;
 
-{/* <div>
+{
+  /* <div>
   <input
     type="text"
     placeholder="Repo link"
@@ -135,4 +139,5 @@ export default App;
     Submit
   </button>
 </div>;
- */}
+ */
+}

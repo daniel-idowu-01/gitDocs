@@ -1,5 +1,5 @@
 import expressRouter from 'express'
-import { authToken } from '../middleware/authToken.js'
+import { authToken } from '../middleware/auth.js'
 import { createUser, login, changePassword, confirmEmail } from '../controllers/auth.controller.js'
 
 const router = expressRouter()

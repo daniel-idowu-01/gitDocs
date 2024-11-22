@@ -1,9 +1,9 @@
-import cors from "cors";
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import axios from "axios";
-import repoRoute from './routes/repo.route.js'
-// import { connectDB } from "./config/mongo.js";
+import { authRoute, repoRoute } from "./routes/index.js";
+import { connectDB } from "./config/mongo.js";
 
 const app = express();
 dotenv.config();
@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// await connectDB();
+await connectDB();
 
 
 app.get("/", (req, res) => {
@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/api/docs', repoRoute)
+app.use('/api/auth', authRoute)
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

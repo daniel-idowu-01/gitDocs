@@ -1,15 +1,21 @@
 import mongoose from "mongoose";
-import User from "../models/User.js";
+import { User } from "../models/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { errorHandler } from "../middleware/errorHandler.js";
 import { emailRegex, passwordRegex } from "../utils/constants.js";
 import { transporter } from "../utils/emailTransport.js";
+import { validateCreateUser } from "../utils/helpers.js";
 
 const createUser = async (req, res, next) => {
   let url;
   try {
     const { username, email, password, profileImage } = req.body;
+
+    const { error } = validateCreateUser(req.body);
+    if (error) {
+      return next(errorHandler(400, error));
+    }
 
     const hashedPassword = await bcrypt.hash(
       password,
@@ -137,8 +143,8 @@ const login = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   let oldPasswordMatch;
-  const { oldPassword, newPassword } = req.body;
   const { id } = req.user;
+  const { oldPassword, newPassword } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(errorHandler(400, "Input valid ID"));
