@@ -1,12 +1,14 @@
-import { Button } from "@/components/ui/button";
-import Nav from "./ui/Nav";
-import Header from "./ui/Header";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
     <div className="montserrat-font">
-      <Nav />
-      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
     </div>
   );
 }
