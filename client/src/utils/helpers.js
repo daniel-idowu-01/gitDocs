@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-function validateGithubUrl(url) {
+export const validateGithubUrl = (url) => {
   const githubUrlSchema = Joi.string()
     .uri()
     .pattern(/^https:\/\/github\.com\/[^\/]+\/[^\/]+/, "GitHub repository URL")
@@ -15,6 +15,4 @@ function validateGithubUrl(url) {
   }
 
   return { valid: true, message: "Valid GitHub URL." };
-}
-
-export { validateGithubUrl };
+};
