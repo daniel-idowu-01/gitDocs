@@ -7,12 +7,13 @@ const Nav = () => {
         <h1 className="doto-font text-2xl">GitDocs</h1>
       </div>
       <div className="flex items-center space-x-4">
-        <button
-          href="#"
-          className="px-6 py-2 border border-[#ff7f50] text-[#ff7f50] rounded-full font-semibold"
+        <a
+          href="https://github.com/daniel-idowu-01/gitDocs"
+          target="_blank"
+          className="hidden md:block px-6 py-2 border border-[#ff7f50] text-[#ff7f50] rounded-full font-semibold"
         >
           Contribute
-        </button>
+        </a>
         {/* <button href="#" className="text-gray-700 font-semibold">
           Log in
         </button> */}

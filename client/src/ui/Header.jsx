@@ -10,7 +10,8 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const notifyError = () => toast.warn("Enter a valid URL!");
-  const notifySuccess = () => toast.success("Documentation successfully generated!");
+  const notifySuccess = () =>
+    toast.success("Documentation successfully generated!");
 
   // Handle form submission
   const handleRepoUrl = (e) => {
@@ -37,6 +38,7 @@ const Header = () => {
         if (!response.ok) {
           return Promise.reject("Failed to fetch");
         }
+        notifySuccess()
         setIsLoading(false);
         return response.blob();
       })
@@ -51,7 +53,7 @@ const Header = () => {
   };
 
   return (
-    <main className="bg-[#031f39] text-white text-center py-32">
+    <main className="bg-[#031f39] text-white text-center py-14 md:py-32 px-2">
       <ToastContainer />
       <div className="flex justify-center">
         <img
@@ -60,16 +62,16 @@ const Header = () => {
           alt=""
         />
       </div>
-      <h1 className="relative text-4xl font-bold mb-4 z-50">
+      <h1 className="relative text-3xl md:text-4xl font-bold mb-4 z-50">
         Transform Your GitHub Repositories into Professional Documentation
       </h1>
-      <p className="relative z-50 text-lg mb-8">
+      <p className="relative z-50 md:text-lg mb-8">
         Turn your GitHub projects into polished, ready-to-share documentation
         with just one click.
       </p>
       <div className="flex justify-center space-x-4 mb-8"></div>
       <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-2">
+        <h2 className="text-xl md:text-2xl font-bold mb-2">
           Generate Documentation For Your{" "}
           <span className="underline">GitHub</span> Project
         </h2>
