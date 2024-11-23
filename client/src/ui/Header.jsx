@@ -9,7 +9,8 @@ const Header = () => {
   const [repoUrl, setRepoUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const notify = () => toast.warn("Enter a valid URL!");
+  const notifyError = () => toast.warn("Enter a valid URL!");
+  const notifySuccess = () => toast.success("Documentation successfully generated!");
 
   // Handle form submission
   const handleRepoUrl = (e) => {
@@ -18,7 +19,7 @@ const Header = () => {
     const result = validateGithubUrl(repoUrl);
 
     if (!result.valid) {
-      notify();
+      notifyError();
       return;
     }
 
@@ -41,7 +42,7 @@ const Header = () => {
       })
       .then((blob) => {
         const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
+        window.open(url, "_blank");
       })
       .catch((error) => {
         setIsLoading(false);
@@ -96,7 +97,7 @@ const Header = () => {
           } w-full py-3  text-white rounded font-semibold flex items-center justify-center gap-2`}
         >
           {isLoading && <Spinner />}
-          Generate
+          {isLoading ? "Generating" : "Generate"}
         </button>
       </article>
     </main>
