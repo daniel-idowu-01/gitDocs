@@ -11,6 +11,6 @@ function App() {
   );
 }
 
-// e6e6e6 : color for button on disabled
+//  : color for button on disabled
 
 export default App;

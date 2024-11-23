@@ -1,9 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { validateGithubUrl } from "../utils/helpers";
+import { ToastContainer, toast } from "react-toastify";
+import Spinner from "./components/Spinner";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
   const [repoUrl, setRepoUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const notify = () => toast.warn("Enter a valid URL!");
 
   // Handle form submission
   const handleRepoUrl = (e) => {
@@ -12,10 +18,12 @@ const Header = () => {
     const result = validateGithubUrl(repoUrl);
 
     if (!result.valid) {
-      alert("URL not valid");
+      notify();
+      return;
     }
 
-    fetch("http://localhost:3000/api/docs", {
+    setIsLoading(true);
+    fetch("http://localhost:8000/api/docs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,23 +36,29 @@ const Header = () => {
         if (!response.ok) {
           return Promise.reject("Failed to fetch");
         }
-        return response.json(); // Parse the JSON response
+        setIsLoading(false);
+        return response.blob();
       })
-      .then((data) => {
-        console.log("Success:", data);
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
       })
       .catch((error) => {
+        setIsLoading(false);
         console.error("Error:", error);
       });
   };
 
   return (
     <main className="bg-[#031f39] text-white text-center py-32">
-      <img
-        className="absolute left-10 top-24 w-80 z-10 -rotate-45 opacity-50 brightness-150"
-        src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-        alt=""
-      />
+      <ToastContainer />
+      <div className="flex justify-center">
+        <img
+          className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
+          src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+          alt=""
+        />
+      </div>
       <h1 className="relative text-4xl font-bold mb-4 z-50">
         Transform Your GitHub Repositories into Professional Documentation
       </h1>
@@ -53,12 +67,7 @@ const Header = () => {
         with just one click.
       </p>
       <div className="flex justify-center space-x-4 mb-8"></div>
-      <img
-        className="absolute right-10 bottom-24 w-20 z-10 rotate-45 opacity-50 brightness-150"
-        src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-        alt=""
-      />
-      <article className="bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
+      <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
         <h2 className="text-2xl font-bold mb-2">
           Generate Documentation For Your{" "}
           <span className="underline">GitHub</span> Project
@@ -80,10 +89,14 @@ const Header = () => {
           />
         </div>
         <button
+          disabled={!repoUrl.trim() || isLoading}
           onClick={handleRepoUrl}
-          className="w-full py-3 bg-[#ff7f50] text-white rounded font-semibold"
+          className={`${
+            !repoUrl.trim() || isLoading ? "bg-[#e6e6e6]" : "bg-[#ff7f50]"
+          } w-full py-3  text-white rounded font-semibold flex items-center justify-center gap-2`}
         >
-          Generate <i className="fas fa-arrow-right ml-2"></i>
+          {isLoading && <Spinner />}
+          Generate
         </button>
       </article>
     </main>

@@ -15,7 +15,7 @@ const generateDocumentation = async (req, res, next) => {
   let repository, documentation;
 
   try {
-    let userId = req.user.id;
+    // let userId = req.user.id;
     const { repoUrl } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
@@ -58,16 +58,16 @@ const generateDocumentation = async (req, res, next) => {
       }
     }
 
-    repository = await Repository.create({
-      userId,
-      repoName,
-      repoUrl,
-    });
+    // repository = await Repository.create({
+    //   userId,
+    //   repoName,
+    //   repoUrl,
+    // });
 
-    documentation = await Documentation.create({
-      repoId: repository._id,
-      content: fullDocumentation
-    })
+    // documentation = await Documentation.create({
+    //   repoId: repository._id,
+    //   content: fullDocumentation
+    // })
 
     // Convert repo (Markdown) to HTML
     //const repoHtml = await markdownService.convertMarkdownToHTML(fullDocumentation);
@@ -77,6 +77,7 @@ const generateDocumentation = async (req, res, next) => {
 
     // Return the PDF or HTML as response
     res.setHeader("Content-Type", "application/pdf");
+    res.setHeader('Content-Disposition', 'inline; filename=documentation.pdf')
     res.send(pdf);
   } catch (error) {
     next(error);
