@@ -10,6 +10,7 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const notifyError = () => toast.warn("Enter a valid URL!");
+  const notifyCatchError = (error) => toast.warn(error);
   const notifySuccess = () =>
     toast.success("Documentation successfully generated!");
 
@@ -25,7 +26,7 @@ const Header = () => {
     }
 
     setIsLoading(true);
-    fetch("http://localhost:8000/api/docs", {
+    fetch("http://localhost:5000/api/docs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,6 +49,7 @@ const Header = () => {
       })
       .catch((error) => {
         setIsLoading(false);
+        notifyCatchError(`${error}`)
         console.error("Error:", error);
       });
   };

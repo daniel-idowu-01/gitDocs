@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import axios from "axios";
-import { authRoute, repoRoute } from "./routes/index.js";
+import { authRoute, repoRoute, adminRoute } from "./routes/index.js";
 import { connectDB } from "./config/mongo.js";
 
 const app = express();
@@ -21,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use('/api/docs', repoRoute)
 app.use('/api/auth', authRoute)
+app.use('/api/admin', adminRoute)
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

@@ -5,16 +5,31 @@ import {
   pdfGenerator,
   aiService,
 } from "../services/index.js";
-import { Repository, Documentation } from "../models/index.js";
+import { Repository, Documentation, GenerateRequest } from "../models/index.js";
 
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const createRepo = async (req, res) => {
+  try {
+    const { userId, repoName, repoUrl } = req.body;
+    const repo = await Repository.create({ userId, repoName, repoUrl });
+
+    return res.status(201).json(repo);
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
 const generateDocumentation = async (req, res, next) => {
   let repository, documentation;
 
   try {
+    await GenerateRequest.findByIdAndUpdate(process.env.GENERATE_ID, {
+      $inc: { count: 1 },
+    });
+
     // let userId = req.user.id;
     const { repoUrl } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
@@ -77,11 +92,11 @@ const generateDocumentation = async (req, res, next) => {
 
     // Return the PDF or HTML as response
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader('Content-Disposition', 'inline; filename=documentation.pdf')
+    res.setHeader("Content-Disposition", "inline; filename=documentation.pdf");
     res.send(pdf);
   } catch (error) {
     next(error);
   }
 };
 
-export { generateDocumentation };
+export { createRepo, generateDocumentation };
