@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import axios from "axios";
 import { authRoute, repoRoute, adminRoute } from "./routes/index.js";
 import { connectDB } from "./config/mongo.js";
 

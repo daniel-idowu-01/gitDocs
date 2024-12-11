@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import Spinner from "./components/Spinner";
@@ -8,24 +7,51 @@ import "react-toastify/dist/ReactToastify.css";
 const Header = () => {
   const [repoUrl, setRepoUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [timer, setTimer] = useState(120);
+  const [intervalId, setIntervalId] = useState(null);
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
   const notifySuccess = () =>
     toast.success("Documentation successfully generated!");
 
-  // Handle form submission
+  // Timer countdown logic with iterative extension
+  useEffect(() => {
+    if (isLoading) {
+      const id = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+
+      // Store the interval ID to clear it when needed
+      setIntervalId(id);
+    }
+
+    // If time runs out and request is still in progress, extend the timer by 30 seconds
+    if (timer === 0 && isLoading) {
+      toast.info(
+        "Kindly give us an extra 30 seconds to process your documentation"
+      );
+      setTimer(30);
+    }
+
+    // Cleanup the interval when the timer is no longer active
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isLoading, timer]);
+
   const handleRepoUrl = (e) => {
     e.preventDefault();
 
     const result = validateGithubUrl(repoUrl);
-
     if (!result.valid) {
       notifyError();
       return;
     }
 
     setIsLoading(true);
+    setTimer(120);
+
     fetch("http://localhost:5000/api/docs", {
       method: "POST",
       headers: {
@@ -39,7 +65,7 @@ const Header = () => {
         if (!response.ok) {
           return Promise.reject("Failed to fetch");
         }
-        notifySuccess()
+        notifySuccess();
         setIsLoading(false);
         return response.blob();
       })
@@ -49,9 +75,15 @@ const Header = () => {
       })
       .catch((error) => {
         setIsLoading(false);
-        notifyCatchError(`${error}`)
+        notifyCatchError(`${error}`);
         console.error("Error:", error);
       });
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   return (
@@ -103,6 +135,13 @@ const Header = () => {
           {isLoading && <Spinner />}
           {isLoading ? "Generating" : "Generate"}
         </button>
+
+        {/* Timer Display */}
+        {isLoading && (
+          <div className="mt-4 text-sm">
+            Your documentation will be generated in: {formatTime(timer)}
+          </div>
+        )}
       </article>
     </main>
   );
