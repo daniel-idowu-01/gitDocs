@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import AdminDashboard from "./pages/AdminDashboard";
+import { Home, AdminDashboard, Login, SignUp, NotFound } from "./pages";
 
 function App() {
   return (
@@ -8,6 +7,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

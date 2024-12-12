@@ -10,7 +10,7 @@ import { validateCreateUser } from "../utils/helpers.js";
 const createUser = async (req, res, next) => {
   let url;
   try {
-    const { username, email, password, profileImage } = req.body;
+    const { email, password } = req.body;
 
     const { error } = validateCreateUser(req.body);
     if (error) {
@@ -57,10 +57,8 @@ const createUser = async (req, res, next) => {
     }
 
     const createdUser = await User.create({
-      username,
       email,
       password: hashedPassword,
-      profileImage,
     });
 
     /* jwt.sign(
@@ -105,18 +103,15 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   let user, token, passwordMatch;
   try {
-    const { identity, password } = req.body;
-    if (!identity || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       return next(errorHandler(400, "Email or password is required!"));
     }
-
-    const isEmail = emailRegex.test(identity);
-    const userField = isEmail ? "email" : "username";
-
-    user = await User.findOne({ [userField]: identity });
+    
+    user = await User.findOne({ email });
 
     if (!user) {
-      const errorMessage = isEmail ? "Email not found!" : "Username not found!";
+      const errorMessage = "Email not found!";
       return next(errorHandler(400, errorMessage));
     }
 

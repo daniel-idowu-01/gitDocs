@@ -19,9 +19,6 @@ export const validateGithubUrl = (url) => {
 
 export const validateCreateUser = (user) => {
   const schema = Joi.object({
-    username: Joi.string()
-      .pattern(new RegExp("^[a-zA-Z_][a-zA-Z0-9_]{1,19}$"))
-      .required(),
     email: Joi.string().email().required(),
     password: Joi.string()
       .pattern(
