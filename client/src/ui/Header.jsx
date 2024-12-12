@@ -3,6 +3,7 @@ import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import Spinner from "./components/Spinner";
 import "react-toastify/dist/ReactToastify.css";
+import Nav from "./Nav";
 
 const Header = () => {
   const [repoUrl, setRepoUrl] = useState("");
@@ -87,8 +88,9 @@ const Header = () => {
   };
 
   return (
-    <main className="bg-[#031f39] text-white text-center py-14 md:py-32 px-2">
+    <main className="text-white text-center px-2 min-h-screen">
       <ToastContainer />
+      <Nav />
       <div className="flex justify-center">
         <img
           className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
@@ -96,14 +98,18 @@ const Header = () => {
           alt=""
         />
       </div>
-      <h1 className="relative text-3xl md:text-4xl font-bold mb-4 z-50">
-        Transform Your GitHub Repositories into Professional Documentation
+      <h1
+        style={{ lineHeight: "3.5rem" }}
+        className="relative text-3xl md:text-5xl font-bold mb-4 md:mt-20 z-50"
+      >
+        <span className="text-[#ff7f50]">Transform</span> Your GitHub
+        Repositories into <br />Professional Documentation
       </h1>
       <p className="relative z-50 md:text-lg mb-8">
         Turn your GitHub projects into polished, ready-to-share documentation
         with just one click.
       </p>
-      <div className="flex justify-center space-x-4 mb-8"></div>
+      <div className="flex justify-center space-x-4 mb-5"></div>
       <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
         <h2 className="text-xl md:text-2xl font-bold mb-2">
           Generate Documentation For Your{" "}

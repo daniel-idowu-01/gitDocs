@@ -4,8 +4,7 @@ import Header from "../ui/Header";
 
 const Home = () => {
   return (
-    <div>
-      <Nav />
+    <div className="bg-[#031f39]">
       <Header />
     </div>
   );

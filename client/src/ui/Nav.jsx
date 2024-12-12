@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const Nav = () => {
   return (
-    <nav className="flex justify-between items-center p-5 px-8 bg-[#031f39] shadow-md">
+    <nav className="flex justify-between items-center p-5 px-8 ">
       <div className="flex items-center">
-        <h1 className="doto-font text-2xl text-gray-300 uppercase">GitDocs</h1>
+        <h1 className="doto-font text-2xl text-gray-300 uppercase tracking-widest">GitDocs</h1>
       </div>
       <div className="flex items-center space-x-4">
         <a
