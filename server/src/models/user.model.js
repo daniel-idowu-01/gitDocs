@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema(
     githubUrl: {
       type: String,
     },
+    githubProfileUrl: {
+      type: String,
+    },
     emailVerified: {
       type: Boolean,
       default: false,
@@ -36,7 +39,15 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret.password;
+      },
+    },
+  }
 );
 
 export default mongoose.model("User", userSchema);

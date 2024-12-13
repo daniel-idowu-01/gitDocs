@@ -99,4 +99,14 @@ const generateDocumentation = async (req, res, next) => {
   }
 };
 
-export { createRepo, generateDocumentation };
+const getUserGithubRepos = async (req, res) => {
+  try {
+    const user = await githubService.getUserGithubRepos(req.user);
+
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createRepo, generateDocumentation, getUserGithubRepos };

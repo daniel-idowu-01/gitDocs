@@ -133,4 +133,22 @@ export default class GithubService {
       console.error("Error checking rate limit:", error);
     }
   }
+
+  async getUserGithubRepos(user) {
+    try {
+      if (!user) return res.status(401).send("Unauthorized");
+  
+    const response = await fetch("https://api.github.com/user/repos", {
+      headers: {
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    });
+    const repos = await response.json();
+    res.json(repos);
+      
+    } catch (error) {
+      console.log('rrr', error)
+      return null
+    }
+  }
 }
