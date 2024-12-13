@@ -21,8 +21,6 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  console.log(dashboardData)
-
   return (
     <div className="flex h-screen bg-gray-100">
       <DashboardSideNav />
