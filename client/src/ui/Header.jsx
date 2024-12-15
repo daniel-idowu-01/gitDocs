@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import Spinner from "./components/Spinner";
 import "react-toastify/dist/ReactToastify.css";
+import { formatTime } from "../utils/helpers";
 import Nav from "./Nav";
+import userModel from "../../../server/src/models/user.model";
+import { AuthContext } from "../utils/authContext";
 
 const Header = () => {
   const [repoUrl, setRepoUrl] = useState("");
+  const [userRepos, setUserRepos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRepoLoading, setIsRepoLoading] = useState(false);
   const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
+  const { isAuthenticated, user } = useContext(AuthContext);
+  console.log("user", user);
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
@@ -81,10 +88,33 @@ const Header = () => {
       });
   };
 
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  const searchUserRepos = () => {
+    if (isAuthenticated) {
+      setIsRepoLoading(true);
+      fetch("http://localhost:5000/api/docs/user/repos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          githubUrl: user.githubUrl,
+        }),
+      })
+        .then((res) => {
+          setIsRepoLoading(false);
+          return res.json();
+        })
+        .then((data) => {
+          setUserRepos(data.repos);
+          console.log("daa", data);
+        })
+        .catch((err) => {
+          setIsRepoLoading(false);
+          console.log("Errrrrrrrrrr", err);
+        });
+    } else {
+      return null;
+    }
   };
 
   return (
@@ -103,7 +133,8 @@ const Header = () => {
         className="relative text-3xl md:text-5xl font-bold mb-4 md:mt-20 z-50"
       >
         <span className="text-[#ff7f50]">Transform</span> Your GitHub
-        Repositories into <br />Professional Documentation
+        Repositories into <br />
+        Professional Documentation
       </h1>
       <p className="relative z-50 md:text-lg mb-8">
         Turn your GitHub projects into polished, ready-to-share documentation
@@ -125,12 +156,39 @@ const Header = () => {
           </label>
           <input
             type="text"
-            className="w-full p-2 py-3 border border-gray-300 rounded mb-4"
+            onFocus={searchUserRepos}
+            className={`${
+              !isRepoLoading == false && "mb-4"
+            } w-full p-2 py-3 border border-gray-300 rounded`}
             placeholder="https://github.com/username/project"
             value={repoUrl}
             onChange={(e) => setRepoUrl(e.target.value)}
           />
         </div>
+
+        <div
+          className={`${
+            userRepos?.length > 0 && "h-64 overflow-scroll"
+          } flex flex-col divide-y-2 mb-4 text-left text-sm `}
+        >
+          {isRepoLoading ? (
+            <span className="mx-auto">
+              <Spinner />
+            </span>
+          ) : (
+            userRepos.map((repo, index) => (
+              <article key={index} className="px-4 py-2 underline">
+                <p
+                  className="hover:cursor-pointer"
+                  onClick={() => setRepoUrl(repo)}
+                >
+                  {repo}
+                </p>
+              </article>
+            ))
+          )}
+        </div>
+
         <button
           disabled={!repoUrl.trim() || isLoading}
           onClick={handleRepoUrl}

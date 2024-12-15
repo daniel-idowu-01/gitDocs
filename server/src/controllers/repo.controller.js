@@ -101,9 +101,13 @@ const generateDocumentation = async (req, res, next) => {
 
 const getUserGithubRepos = async (req, res) => {
   try {
-    const user = await githubService.getUserGithubRepos(req.user);
+    const { githubUrl } = req.body;
+    const repos = await githubService.getUserGithubRepos(githubUrl);
+    if (repos) {
+      return res.status(200).json({ success: true, repos });
+    }
 
-    return res.status(200).json({ success: true, user });
+    return res.status(200).json({ success: true, message: "No repositories" });
   } catch (error) {
     next(error);
   }

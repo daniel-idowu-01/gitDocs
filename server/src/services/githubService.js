@@ -45,9 +45,13 @@ export default class GithubService {
         ".bmp",
         ".tiff",
         ".ico",
-        '.css'
+        ".css",
       ];
-      const skippedFiles = ["package-lock.json", ".gitignore", ".eslintrc.json"];
+      const skippedFiles = [
+        "package-lock.json",
+        ".gitignore",
+        ".eslintrc.json",
+      ];
       const skippedDirs = ["node_modules", "images", "assets", ".git"];
 
       // Skip if the file path matches any of the skipped extensions or directories
@@ -75,7 +79,7 @@ export default class GithubService {
         for (const item of fileData.data) {
           if (
             skippedExtensions.some((ext) => item.path.endsWith(ext)) ||
-            skippedFiles.some(file => item.path.endsWith(file)) ||
+            skippedFiles.some((file) => item.path.endsWith(file)) ||
             skippedDirs.some((dir) => item.path.includes(dir))
           ) {
             continue;
@@ -103,7 +107,7 @@ export default class GithubService {
             }
           }
         }
-        
+
         return directoryContents;
       } else if (fileData.data.type === "file") {
         if (fileData.data.content) {
@@ -134,21 +138,22 @@ export default class GithubService {
     }
   }
 
-  async getUserGithubRepos(user) {
+  async getUserGithubRepos(url) {
     try {
-      if (!user) return res.status(401).send("Unauthorized");
-  
-    const response = await fetch("https://api.github.com/user/repos", {
-      headers: {
-        Authorization: `Bearer ${user.accessToken}`,
-      },
-    });
-    const repos = await response.json();
-    res.json(repos);
-      
+      const parts = url.split("https://github.com/");
+      const owner = parts[1]
+      const response = await fetch(`https://api.github.com/users/${owner}/repos`, {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        },
+      });
+      const repos = await response.json();
+      const repoUrls = repos.map(repo => repo.html_url);
+
+      return repoUrls;
     } catch (error) {
-      console.log('rrr', error)
-      return null
+      console.log("rrr", error);
+      return null;
     }
   }
 }

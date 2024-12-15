@@ -4,8 +4,8 @@ import { AuthContext } from "../utils/authContext";
 
 const Nav = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
-  console.log("isAuthenticated", isAuthenticated);
-  console.log("user", user); //USER.PROFILE.PROFILEURL OR USER.GITHUBPROFILEURL
+  /* console.log("isAuthenticated", isAuthenticated);
+  console.log("user", user); */ //USER.PROFILE.PROFILEURL OR USER.GITHUBPROFILEURL
 
   return (
     <nav className="flex justify-between items-center p-5 px-8 ">
