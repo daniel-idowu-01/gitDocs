@@ -80,12 +80,7 @@ passport.deserializeUser((user, done) => {
 await connectDB();
 
 app.get("/", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  if (req.isAuthenticated()) {
-    res.json({ authenticated: true, user: req.user });
-  } else {
-    res.json({ authenticated: false });
-  }
+  res.send('App is running!')
 });
 
 app.use("/api/docs", repoRoute);

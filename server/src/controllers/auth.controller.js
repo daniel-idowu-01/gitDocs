@@ -208,4 +208,13 @@ const confirmEmail = async (req, res, next) => {
   /* res.redirect(FRONTEND_URL) */
 };
 
-export { createUser, login, changePassword, confirmEmail };
+const checkAuth = (req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  if (req.isAuthenticated()) {
+    res.json({ authenticated: true, user: req.user });
+  } else {
+    res.json({ authenticated: false });
+  }
+}
+
+export { createUser, login, changePassword, confirmEmail, checkAuth };

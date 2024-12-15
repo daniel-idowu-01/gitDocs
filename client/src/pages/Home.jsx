@@ -1,33 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../utils/authContext";
 import Header from "../ui/Header";
 
 const Home = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const { isAuthenticated, user } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.authenticated) {
-          setIsAuthenticated(true);
-          console.log("User is authenticated:", data.user);
-        } else {
-          console.log("User is not authenticated");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, [isAuthenticated]);
   return (
     <div className="bg-[#031f39]">
       {!isAuthenticated && (

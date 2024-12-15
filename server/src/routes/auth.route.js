@@ -6,6 +6,7 @@ import {
   login,
   changePassword,
   confirmEmail,
+  checkAuth
 } from "../controllers/auth.controller.js";
 
 const router = expressRouter();
@@ -14,6 +15,7 @@ router.post("/", createUser);
 router.post("/login", login);
 router.put("/change-password", authToken, changePassword);
 router.get("/confirm-email/:emailToken", confirmEmail);
+router.get("/check-auth", checkAuth);
 router.get(
   "/github",
   passport.authenticate("github", { scope: ["user:email", "repo"] })
