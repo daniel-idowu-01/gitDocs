@@ -5,7 +5,6 @@ import Spinner from "./components/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import { formatTime } from "../utils/helpers";
 import Nav from "./Nav";
-import userModel from "../../../server/src/models/user.model";
 import { AuthContext } from "../utils/authContext";
 
 const Header = () => {
@@ -120,6 +119,7 @@ const Header = () => {
     <main className="text-white text-center px-2 min-h-screen">
       <ToastContainer />
       <Nav />
+      {/* Header Body Content */}
       <div className="flex justify-center">
         <img
           className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
@@ -140,6 +140,8 @@ const Header = () => {
         with just one click.
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
+
+      {/* Generate Documentation Section */}
       <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
         <h2 className="text-xl md:text-2xl font-bold mb-2">
           Generate Documentation For Your{" "}
@@ -149,6 +151,7 @@ const Header = () => {
           No credit card required. <b>it's completely free!</b>
         </p>
 
+        {/* Input Section */}
         <div className="mt-10">
           <label className="block text-left mb-2 font-semibold">
             Paste your GitHub repository link here
@@ -165,9 +168,10 @@ const Header = () => {
           />
         </div>
 
+        {/* This section shows when the user's repos has been fetched */}
         <div
           className={`${
-            userRepos?.length > 0 && "h-64 overflow-scroll hide-scrollbar"
+            userRepos?.length > 0 && "h-60 overflow-scroll hide-scrollbar"
           } flex flex-col divide-y-2 mb-4 text-left text-sm `}
         >
           {isRepoLoading ? (
@@ -188,6 +192,7 @@ const Header = () => {
           )}
         </div>
 
+        {/* The button that sends the request */}
         <button
           disabled={!repoUrl.trim() || isLoading}
           onClick={handleRepoUrl}
