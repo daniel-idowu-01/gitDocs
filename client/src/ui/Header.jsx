@@ -16,8 +16,7 @@ const Header = () => {
   const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
   const { isAuthenticated, user } = useContext(AuthContext);
-  console.log("user", user);
-
+  
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
   const notifySuccess = () =>
@@ -168,7 +167,7 @@ const Header = () => {
 
         <div
           className={`${
-            userRepos?.length > 0 && "h-64 overflow-scroll"
+            userRepos?.length > 0 && "h-64 overflow-scroll hide-scrollbar"
           } flex flex-col divide-y-2 mb-4 text-left text-sm `}
         >
           {isRepoLoading ? (
