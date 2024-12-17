@@ -30,8 +30,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000  // 24 hours
-    }
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
   })
 );
 
@@ -48,8 +48,8 @@ passport.use(
       callbackURL: "http://localhost:5000/api/auth/github/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      const user = await User.findOne({email: profile.emails[0]?.value})
-      if(user) {
+      const user = await User.findOne({ email: profile.emails[0]?.value });
+      if (user) {
         return done(null, user);
       }
       const hashedPassword = await bcrypt.hash(
@@ -58,11 +58,12 @@ passport.use(
       );
       // Save user data in the database or session
       await User.create({
-        email: profile.emails[0]?.value,
+        email: profile?.emails[0].value,
         githubUrl: profile.profileUrl,
-        githubProfileUrl: profile.photos[0]?.value,
+        githubProfileUrl: profile?.photos[0].value,
         password: hashedPassword,
-        emailVerified: true
+        emailVerified: true,
+        githubUsername: profile.username,
       });
       return done(null, { profile, accessToken });
     }
@@ -82,7 +83,7 @@ passport.deserializeUser((user, done) => {
 await connectDB();
 
 app.get("/", (req, res) => {
-  res.send('App is running!')
+  res.send("App is running!");
 });
 
 app.use("/api/docs", repoRoute);

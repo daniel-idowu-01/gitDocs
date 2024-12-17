@@ -118,6 +118,7 @@ export default class AdminService {
 
       // Safely handle the result and default to 0 if no count is returned
       const count = result.length > 0 ? result.length : 0;
+      
       return {
         success: true,
         data: count,
@@ -132,9 +133,15 @@ export default class AdminService {
 
   async getFailedProjects() {
     try {
-      const failedProjects =
+      let failedProjects
+
+      failedProjects =
         (await this.getTotalProjects()).data -
         (await this.getSuccessProjects()).data;
+
+        if (failedProjects.toString().startsWith('-')) {
+          failedProjects = 0
+        }
 
       return {
         success: true,

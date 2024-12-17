@@ -5,7 +5,7 @@ import {
   pdfGenerator,
   aiService,
 } from "../services/index.js";
-import { Repository, Documentation, GenerateRequest } from "../models/index.js";
+import { Repository, Documentation, GenerateRequest, User } from "../models/index.js";
 
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -34,8 +34,9 @@ const generateDocumentation = async (req, res, next) => {
     const { repoUrl } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
+    
     const repoData = await githubService.getRepoData(owner, repoName);
-
+    
     if (!repoData) {
       return next(errorHandler(404, "Repository not found"));
     }
@@ -56,7 +57,7 @@ const generateDocumentation = async (req, res, next) => {
         );
         console.log("Documentation generated successfully");
         fullDocumentation += aiDocumentation + "\n";
-
+        
         await delay(1000);
       } catch (error) {
         if (error.status === 429) {
@@ -72,17 +73,18 @@ const generateDocumentation = async (req, res, next) => {
         }
       }
     }
+    const user = await User.findOne({ githubUsername: owner });
 
     repository = await Repository.create({
-      //userId,
+      userId: user && user._id,
       repoName,
       repoUrl,
     });
 
     documentation = await Documentation.create({
       repoId: repository._id,
-      content: fullDocumentation
-    })
+      content: fullDocumentation,
+    });
 
     // Convert repo (Markdown) to HTML
     //const repoHtml = await markdownService.convertMarkdownToHTML(fullDocumentation);

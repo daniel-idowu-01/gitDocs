@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    githubUsername: {
+      type: String,
+    },
     githubUrl: {
       type: String,
     },

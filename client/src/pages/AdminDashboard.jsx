@@ -28,9 +28,10 @@ const AdminDashboard = () => {
         <DashboardHeader />
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
           <div className="container mx-auto px-6 py-8 flex flex-col gap-10">
-            {dashboardData.map((data, index) => (
-              <DashboardTile key={index} {...data} />
-            ))}
+            {Array.isArray(dashboardData) &&
+              dashboardData.map((data, index) => (
+                <DashboardTile key={index} {...data} />
+              ))}
           </div>
         </main>
       </div>
