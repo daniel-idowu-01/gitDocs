@@ -73,16 +73,16 @@ const generateDocumentation = async (req, res, next) => {
       }
     }
 
-    // repository = await Repository.create({
-    //   userId,
-    //   repoName,
-    //   repoUrl,
-    // });
+    repository = await Repository.create({
+      //userId,
+      repoName,
+      repoUrl,
+    });
 
-    // documentation = await Documentation.create({
-    //   repoId: repository._id,
-    //   content: fullDocumentation
-    // })
+    documentation = await Documentation.create({
+      repoId: repository._id,
+      content: fullDocumentation
+    })
 
     // Convert repo (Markdown) to HTML
     //const repoHtml = await markdownService.convertMarkdownToHTML(fullDocumentation);

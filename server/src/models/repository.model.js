@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const repositorySchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    // userId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User",
+    //   required: true,
+    // },
     repoName: {
       type: String,
       required: true,

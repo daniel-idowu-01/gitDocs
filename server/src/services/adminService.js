@@ -24,7 +24,7 @@ export default class AdminService {
       const users = await User.find({});
 
       users.forEach((user) => {
-        const isInRepos = repos.some((repo) => repo.userId.equals(user._id));
+        const isInRepos = repos.some((repo) => repo.userId == user._id);
         if (isInRepos) {
           activeUsers.push(user.data);
         }
@@ -44,7 +44,7 @@ export default class AdminService {
       const users = await User.find({});
 
       users.forEach((user) => {
-        const isInRepos = repos.some((repo) => repo.userId.equals(user._id));
+        const isInRepos = repos.some((repo) => repo.userId == user._id);
         if (!isInRepos) {
           inactiveUsers.push(user.data);
         }
@@ -112,15 +112,12 @@ export default class AdminService {
 
   async getSuccessProjects() {
     try {
-      // Count distinct repoIds in the Documentation collection
       const result = await Documentation.aggregate([
         { $group: { _id: "$repoId" } },
-        { $count: "repoIdCount" },
       ]);
-  
+
       // Safely handle the result and default to 0 if no count is returned
-      const count = result.length > 0 ? result[0].repoIdCount : 0;
-  
+      const count = result.length > 0 ? result.length : 0;
       return {
         success: true,
         data: count,
@@ -132,12 +129,12 @@ export default class AdminService {
       };
     }
   }
-  
 
   async getFailedProjects() {
     try {
       const failedProjects =
-        (await this.getTotalProjects()).data - (await this.getSuccessProjects()).data;
+        (await this.getTotalProjects()).data -
+        (await this.getSuccessProjects()).data;
 
       return {
         success: true,
@@ -167,8 +164,8 @@ export default class AdminService {
     try {
       let successRate = (await this.getSuccessProjects()).data;
       let generate = (await this.getGenerationRequests()).data;
-      
-      const rate = (successRate / generate) * 100;
+
+      const rate = ((successRate / generate) * 100).toFixed(2);
       return {
         success: true,
         data: rate,

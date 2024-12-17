@@ -56,6 +56,7 @@ const getAdminData = async (req, res, next) => {
 
     return res.status(200).json({ success: true, data: adminData });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
