@@ -116,7 +116,7 @@ const Header = () => {
   };
 
   return (
-    <main className="text-white text-center px-2 min-h-screen">
+    <main className="text-white text-center px-2 min-h-screen pb-10">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
