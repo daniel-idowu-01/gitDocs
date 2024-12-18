@@ -179,7 +179,7 @@ const Header = () => {
               <Spinner />
             </span>
           ) : (
-            userRepos.map((repo, index) => (
+            Array.isArray(userRepos) && userRepos.map((repo, index) => (
               <article key={index} className="px-4 py-2 underline">
                 <p
                   className="hover:cursor-pointer"

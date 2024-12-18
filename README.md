@@ -62,8 +62,7 @@ Gitdoc is a tool that can be used to generate comprehensive and user-friendly do
    ```
 
 5. Access the app:
-   - Admin Dashboard: [http://localhost:3000/admin](http://localhost:3000/admin)
-   - API: [http://localhost:3000/api](http://localhost:3000/api)
+   - API: [http://localhost:5173](http://localhost:5173)
 
 ---
 
