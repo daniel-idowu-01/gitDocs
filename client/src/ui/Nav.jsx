@@ -8,7 +8,7 @@ const Nav = () => {
   console.log("user", user); */ //USER.PROFILE.PROFILEURL OR USER.GITHUBPROFILEURL
 
   return (
-    <nav className="flex justify-between items-center p-5 px-8 ">
+    <nav className="flex justify-between items-center p-5 md:px-8">
       <div className="flex items-center">
         <h1 className="doto-font text-2xl text-gray-300 uppercase tracking-widest">
           GitDocs
@@ -32,12 +32,14 @@ const Nav = () => {
             alt=""
           />
         ) : (
-          <Link
-            to="/signup"
-            className="px-6 py-2 bg-[#ff7f50] hover:bg-[#ff7f50cb] text-white rounded-full font-semibold"
-          >
-            Sign up
-          </Link>
+          <div className="shadow-2xl hover:cursor-pointer">
+            <a
+              href="http://localhost:5000/api/auth/github"
+              className="px-4 md:px-6 py-2 text-xs sm:text-base border bg-[#ff7f50] hover:bg-[#ff7f50cb] text-white border-[#ff7f50] hover:border-[#ff7f50cb] rounded-full font-semibold"
+            >
+              Connect Github
+            </a>
+          </div>
         )}
       </div>
     </nav>
