@@ -6,7 +6,7 @@ import {
   login,
   changePassword,
   confirmEmail,
-  checkAuth
+  checkAuth,
 } from "../controllers/auth.controller.js";
 
 const router = expressRouter();
@@ -24,9 +24,9 @@ router.get(
   "/github/callback",
   passport.authenticate("github", { failureRedirect: "/" }),
   (req, res) => {
-    console.log(req)
+    console.log("Authenticated user:", req.user); 
     // Successful authentication, redirect or respond with user data
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${process.env.FRONTEND_URL}`);
   }
 );
 
