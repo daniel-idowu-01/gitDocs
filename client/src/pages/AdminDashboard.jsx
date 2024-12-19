@@ -10,7 +10,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/admin");
+        const response = await fetch(`${process.env.BASE_URL}/api/admin`);
         const result = await response.json();
         setDashboardData(result.data);
       } catch (error) {

@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    fetch("http://localhost:5000/api/auth/login", {
+    fetch(`${process.env.BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

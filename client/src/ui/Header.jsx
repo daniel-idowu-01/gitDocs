@@ -15,7 +15,7 @@ const Header = () => {
   const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
   const { isAuthenticated, user } = useContext(AuthContext);
-  
+
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
   const notifySuccess = () =>
@@ -58,7 +58,7 @@ const Header = () => {
     setIsLoading(true);
     setTimer(120);
 
-    fetch("http://localhost:5000/api/docs", {
+    fetch(`${process.env.BASE_URL}/api/docs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const Header = () => {
   const searchUserRepos = () => {
     if (isAuthenticated) {
       setIsRepoLoading(true);
-      fetch("http://localhost:5000/api/docs/user/repos", {
+      fetch(`${process.env.BASE_URL}/api/docs/user/repos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -179,7 +179,8 @@ const Header = () => {
               <Spinner />
             </span>
           ) : (
-            Array.isArray(userRepos) && userRepos.map((repo, index) => (
+            Array.isArray(userRepos) &&
+            userRepos.map((repo, index) => (
               <article key={index} className="px-4 py-2 underline">
                 <p
                   className="hover:cursor-pointer"

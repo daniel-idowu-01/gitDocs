@@ -34,7 +34,7 @@ const Nav = () => {
         ) : (
           <div className="shadow-2xl hover:cursor-pointer">
             <a
-              href="http://localhost:5000/api/auth/github"
+              href={`${process.env.BASE_URL}/api/auth/github`}
               className="px-4 md:px-6 py-2 text-xs sm:text-base border bg-[#ff7f50] hover:bg-[#ff7f50cb] text-white border-[#ff7f50] hover:border-[#ff7f50cb] rounded-full font-semibold"
             >
               Connect Github

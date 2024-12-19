@@ -12,7 +12,7 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const buttonStyle =
     "border bg-button p-3 rounded-md hover:bg-opacity-80 transition-all";
-    const notifyCatchError = (error) => toast.warn(error);
+  const notifyCatchError = (error) => toast.warn(error);
 
   const handleFormChange = (e) => {
     setFormInput({ ...formInput, [e.target.name]: e.target.value });
@@ -22,7 +22,7 @@ const SignUp = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    fetch("http://localhost:5000/api/auth", {
+    fetch(`${process.env.BASE_URL}/api/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,8 +35,8 @@ const SignUp = () => {
       })
       .then((data) => {
         if (data.statusCode == 400) {
-            notifyCatchError(`${data.message}`);
-          }
+          notifyCatchError(`${data.message}`);
+        }
 
         if (data.success) {
           navigate("/login", { replace: true });

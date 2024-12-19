@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
@@ -7,9 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/auth/check-auth', {
-      method: 'GET',
-      credentials: 'include'
+    fetch(`${process.env.BASE_URL}/api/auth/check-auth`, {
+      method: "GET",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
           setUser(data.user);
         }
       })
-      .catch((err) => console.error('Error checking auth status:', err));
+      .catch((err) => console.error("Error checking auth status:", err));
   }, []);
 
   return (
