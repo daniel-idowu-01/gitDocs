@@ -9,11 +9,10 @@ import { authRoute, repoRoute, adminRoute } from "./routes/index.js";
 import { connectDB } from "./config/mongo.js";
 import { User } from "./models/index.js";
 import bcrypt from "bcrypt";
+import { allow } from "joi";
 
 const app = express();
 dotenv.config();
-
-console.log(`${process.env.FRONTEND_URL}`, `${process.env.FRONTEND_URL}`);
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -21,6 +20,8 @@ const allowedOrigins = [
   `${process.env.BASE_URL}`,
   ,
 ];
+
+console.log("allowedOrigins", allowedOrigins)
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -30,6 +31,7 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
