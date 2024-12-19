@@ -17,9 +17,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   `${process.env.FRONTEND_URL}`,
   `${process.env.BASE_URL}`,
-  ,
 ];
-console.log("allowedOrigins", allowedOrigins)
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -94,12 +92,17 @@ passport.use(
 
 // Serialize user
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user._id);
 });
 
 // Deserialize user
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
 });
 
 await connectDB();
