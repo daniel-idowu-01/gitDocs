@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../utils/authContext";
 
 const Nav = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
-  /* console.log("isAuthenticated", isAuthenticated);
-  console.log("user", user); */ //USER.PROFILE.PROFILEURL OR USER.GITHUBPROFILEURL
+  console.log("isAuthenticated", isAuthenticated);
+  console.log("user", user);
 
   return (
     <nav className="flex justify-between items-center p-5 md:px-8">
@@ -34,7 +33,7 @@ const Nav = () => {
         ) : (
           <div className="shadow-2xl hover:cursor-pointer">
             <a
-              href={`${process.env.BASE_URL}/api/auth/github`}
+              href={`${import.meta.env.VITE_BACKEND_URL}/api/auth/github`}
               className="px-4 md:px-6 py-2 text-xs sm:text-base border bg-[#ff7f50] hover:bg-[#ff7f50cb] text-white border-[#ff7f50] hover:border-[#ff7f50cb] rounded-full font-semibold"
             >
               Connect Github

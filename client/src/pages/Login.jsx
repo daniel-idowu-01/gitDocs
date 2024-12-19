@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    fetch(`${process.env.BASE_URL}/api/auth/login`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

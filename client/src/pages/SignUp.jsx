@@ -22,7 +22,7 @@ const SignUp = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    fetch(`${process.env.BASE_URL}/api/auth`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

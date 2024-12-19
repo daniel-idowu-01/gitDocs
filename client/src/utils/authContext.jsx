@@ -7,11 +7,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch(`${process.env.BASE_URL}/api/auth/check-auth`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`, {
       method: "GET",
       credentials: "include",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log('check-auth response', response)
+        response.json();
+      })
       .then((data) => {
         if (data.authenticated) {
           setIsAuthenticated(true);

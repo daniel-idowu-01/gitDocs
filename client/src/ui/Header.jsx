@@ -58,7 +58,7 @@ const Header = () => {
     setIsLoading(true);
     setTimer(120);
 
-    fetch(`${process.env.BASE_URL}/api/docs`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/docs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const Header = () => {
   const searchUserRepos = () => {
     if (isAuthenticated) {
       setIsRepoLoading(true);
-      fetch(`${process.env.BASE_URL}/api/docs/user/repos`, {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/docs/user/repos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
