@@ -64,11 +64,13 @@ app.use(passport.session());
 
 // Serialize user
 passport.serializeUser((user, done) => {
+  console.log("Serialize user:", user);
   done(null, user);
 });
 
 // Deserialize user
 passport.deserializeUser((user, done) => {
+  console.log("Deserialize user:", user);
   done(null, user);
 });
 
@@ -98,6 +100,8 @@ passport.use(
           });
         }
 
+        console.log('user', user)
+
         return done(null, user);
       } catch (err) {
         return done(err, null);
@@ -105,20 +109,6 @@ passport.use(
     }
   )
 );
-
-// Auth middleware to deserialize user
-app.use(async (req, res, next) => {
-  console.log("Session user:", req.session);
-  if (req.session && req.session.userId) {
-    try {
-      const user = await User.findById(req.session.userId);
-      req.user = user;
-    } catch (err) {
-      console.error("Session user fetch error:", err);
-    }
-  }
-  next();
-});
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
