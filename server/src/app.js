@@ -13,15 +13,37 @@ import bcrypt from "bcrypt";
 const app = express();
 dotenv.config();
 
-app.use(
-  cors({
-    origin: `${process.env.FRONTEND_URL}`,
-    credentials: true,
-  })
-);
+console.log(`${process.env.FRONTEND_URL}`, `${process.env.FRONTEND_URL}`);
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  `${process.env.FRONTEND_URL}`,
+  `${process.env.BASE_URL}`,
+  ,
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; font-src 'self' data:; img-src 'self' data:;"
+  );
+  next();
+});
 
 // Configure session middleware
 app.use(
