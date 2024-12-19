@@ -62,18 +62,21 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Auth middleware to deserialize user
-app.use(async (req, res, next) => {
-  console.log("Session user:", req.session);
-  if (req.session && req.session.userId) {
-    try {
-      const user = await User.findById(req.session.userId);
-      req.user = user;
-    } catch (err) {
-      console.error('Session user fetch error:', err);
-    }
+passport.serializeUser((user, done) => {
+  console.log("serialized user id", user.id);
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  console.log("Deserialize called with ID:", id);
+  try {
+    const user = await User.findById(id);
+    console.log("Deserialized user:", user);
+    done(null, user);
+  } catch (err) {
+    console.error("Error deserializing user:", err);
+    done(err, null);
   }
-  next();
 });
 
 passport.use(
@@ -101,6 +104,11 @@ passport.use(
             githubUsername: profile.username,
           });
         }
+
+        // Explicitly set session data
+        req.session.userId = user.id;
+        req.session.save();
+
         return done(null, user);
       } catch (err) {
         return done(err, null);
@@ -109,21 +117,19 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  console.log("serialized user id", user.id);
-  done(null, user.id);
-});
 
-passport.deserializeUser(async (id, done) => {
-  console.log("Deserialize called with ID:", id);
-  try {
-    const user = await User.findById(id);
-    console.log("Deserialized user:", user);
-    done(null, user);
-  } catch (err) {
-    console.error("Error deserializing user:", err);
-    done(err, null);
+// Auth middleware to deserialize user
+app.use(async (req, res, next) => {
+  console.log("Session user:", req.session);
+  if (req.session && req.session.userId) {
+    try {
+      const user = await User.findById(req.session.userId);
+      req.user = user;
+    } catch (err) {
+      console.error('Session user fetch error:', err);
+    }
   }
+  next();
 });
 
 app.use((req, res, next) => {
