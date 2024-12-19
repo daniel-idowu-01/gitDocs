@@ -9,22 +9,19 @@ import { authRoute, repoRoute, adminRoute } from "./routes/index.js";
 import { connectDB } from "./config/mongo.js";
 import { User } from "./models/index.js";
 import bcrypt from "bcrypt";
+import MongoStore from "connect-mongo";
 
 const app = express();
 dotenv.config();
 
 await connectDB();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  process.env.FRONTEND_URL,
-  process.env.BASE_URL,
-];
-
-app.use(cors({
-  origin: "https://getgitdocs.netlify.app",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,8 +40,15 @@ app.use(
     secret: process.env.PASSPORT_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_DB,
+      ttl: 14 * 24 * 60 * 60, // Sessions expire in 14 days
+    }),
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: false,
+      httpOnly: true,
+      sameSite: "lax",
     },
   })
 );
@@ -91,23 +95,22 @@ passport.use(
 
 // Serialize user
 passport.serializeUser((user, done) => {
-  console.log('serialized user id', user.id)
+  console.log("serialized user id", user.id);
   done(null, user.id);
 });
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
-  console.log('Deserialize called with ID:', id);
+  console.log("Deserialize called with ID:", id);
   try {
     const user = await User.findById(id);
-    console.log('Deserialized user:', user);
+    console.log("Deserialized user:", user);
     done(null, user);
   } catch (err) {
-    console.error('Error deserializing user:', err);
+    console.error("Error deserializing user:", err);
     done(err, null);
   }
 });
-
 
 app.get("/", (req, res) => {
   res.send("App is running!");
