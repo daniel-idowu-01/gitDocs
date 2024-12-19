@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
       method: "GET",
       credentials: "include",
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
     })

@@ -15,12 +15,16 @@ import { User } from "./models/index.js";
 const app = express();
 dotenv.config();
 
+app.set('trust proxy', 1);
+
 await connectDB();
 
 app.use(
   cors({
-    origin: 'https://getgitdocs.netlify.app',
+    origin: "https://getgitdocs.netlify.app",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(cookieParser());
@@ -40,6 +44,7 @@ app.use(
     secret: process.env.PASSPORT_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_DB,
       ttl: 14 * 24 * 60 * 60,
@@ -48,8 +53,8 @@ app.use(
       maxAge: 24 * 60 * 60 * 1000,
       secure: true,
       httpOnly: true,
-      sameSite: "lax",
-      domain: '.netlify.app',
+      sameSite: "none",
+      domain: "onrender.com",
     },
   })
 );
