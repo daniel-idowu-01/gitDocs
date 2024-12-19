@@ -105,10 +105,6 @@ passport.use(
           });
         }
 
-        // Explicitly set session data
-        req.session.userId = user.id;
-        req.session.save();
-
         return done(null, user);
       } catch (err) {
         return done(err, null);
