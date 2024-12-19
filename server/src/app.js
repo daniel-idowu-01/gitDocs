@@ -15,7 +15,7 @@ import { User } from "./models/index.js";
 const app = express();
 dotenv.config();
 
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 await connectDB();
 
@@ -61,6 +61,15 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  console.log("=== Session Debug ===");
+  console.log("Session:", req.session);
+  console.log("Session ID:", req.sessionID);
+  console.log("Is Authenticated:", req.isAuthenticated());
+  console.log("User:", req.user);
+  next();
+});
 
 passport.serializeUser((user, done) => {
   console.log("serialized user id", user.id);
@@ -113,7 +122,6 @@ passport.use(
   )
 );
 
-
 // Auth middleware to deserialize user
 app.use(async (req, res, next) => {
   console.log("Session user:", req.session);
@@ -122,15 +130,15 @@ app.use(async (req, res, next) => {
       const user = await User.findById(req.session.userId);
       req.user = user;
     } catch (err) {
-      console.error('Session user fetch error:', err);
+      console.error("Session user fetch error:", err);
     }
   }
   next();
 });
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie');
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
   next();
 });
 

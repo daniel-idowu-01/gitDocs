@@ -26,15 +26,10 @@ router.get(
   (req, res) => {
     // Successful authentication, redirect or respond with user data
 
-    res.cookie('connect.sid', 'session-id-value', {
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      httpOnly: true,
-      secure: true, // true if using HTTPS
-      sameSite: 'lax',
-      domain: '.netlify.app', // Set to your frontend domain
+    //Manually save session before redirect.
+    req.session.save(function () {
+      res.redirect(`${process.env.FRONTEND_URL}`);
     });
-    
-    res.redirect(`${process.env.FRONTEND_URL}`);
   }
 );
 
