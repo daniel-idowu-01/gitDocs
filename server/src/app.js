@@ -62,30 +62,14 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  console.log("=== Session Debug ===");
-  console.log("Session:", req.session);
-  console.log("Session ID:", req.sessionID);
-  console.log("Is Authenticated:", req.isAuthenticated());
-  console.log("User:", req.user);
-  next();
-});
-
+// Serialize user
 passport.serializeUser((user, done) => {
-  console.log("serialized user id", user.id);
-  done(null, user.id);
+  done(null, user);
 });
 
-passport.deserializeUser(async (id, done) => {
-  console.log("Deserialize called with ID:", id);
-  try {
-    const user = await User.findById(id);
-    console.log("Deserialized user:", user);
-    done(null, user);
-  } catch (err) {
-    console.error("Error deserializing user:", err);
-    done(err, null);
-  }
+// Deserialize user
+passport.deserializeUser((user, done) => {
+  done(null, user);
 });
 
 passport.use(
