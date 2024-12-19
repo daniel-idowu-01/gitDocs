@@ -18,13 +18,22 @@ router.get("/confirm-email/:emailToken", confirmEmail);
 router.get("/check-auth", checkAuth);
 router.get(
   "/github",
-  passport.authenticate("github", { scope: ["user:email", "repo"] })
+  passport.authenticate("github", { scope: ["user:email"] })
 );
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/" }),
+  passport.authenticate("github", {
+    failureRedirect: "/",
+    session: true,
+    failureMessage: true,
+  }),
   (req, res) => {
-    // Successful authentication, redirect or respond with user data
+    console.log("=== GitHub Callback Debug ===");
+    console.log("User after auth:", req.user);
+    console.log("Session after auth:", req.session);
+    console.log("Is Authenticated:", req.isAuthenticated());
+    console.log("Session ID:", req.sessionID);
+
     res.redirect(`${process.env.FRONTEND_URL}`);
   }
 );

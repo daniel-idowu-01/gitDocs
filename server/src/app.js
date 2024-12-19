@@ -15,8 +15,8 @@ dotenv.config();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  `${process.env.FRONTEND_URL}`,
-  `${process.env.BASE_URL}`,
+  process.env.FRONTEND_URL,
+  process.env.BASE_URL,
 ];
 
 const corsOptions = {
@@ -31,7 +31,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(cookieParser(process.env.PASSPORT_SECRET));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -48,7 +48,7 @@ app.use(
   session({
     secret: process.env.PASSPORT_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
@@ -68,24 +68,29 @@ passport.use(
       callbackURL: `${process.env.BASE_URL}/api/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const user = await User.findOne({ email: profile.emails[0]?.value });
-      if (user) {
+      try {
+        let user = await User.findOne({ email: profile.emails[0]?.value });
+
+        if (!user) {
+          const hashedPassword = await bcrypt.hash(
+            profile.username,
+            Number(process.env.SALT)
+          );
+
+          user = await User.create({
+            email: profile?.emails[0].value,
+            githubUrl: profile.profileUrl,
+            githubProfileUrl: profile?.photos[0].value,
+            password: hashedPassword,
+            emailVerified: true,
+            githubUsername: profile.username,
+          });
+        }
+
         return done(null, user);
+      } catch (err) {
+        return done(err, null);
       }
-      const hashedPassword = await bcrypt.hash(
-        profile.username,
-        Number(process.env.SALT)
-      );
-      // Save user data in the database or session
-      await User.create({
-        email: profile?.emails[0].value,
-        githubUrl: profile.profileUrl,
-        githubProfileUrl: profile?.photos[0].value,
-        password: hashedPassword,
-        emailVerified: true,
-        githubUsername: profile.username,
-      });
-      return done(null, { profile, accessToken });
     }
   )
 );
