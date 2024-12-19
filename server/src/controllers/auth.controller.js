@@ -214,10 +214,11 @@ const checkAuth = (req, res, next) => {
   console.log("Authenticated:", req.isAuthenticated());
   res.setHeader("Content-Type", "application/json");
   res.setHeader('Access-Control-Expose-Headers', 'Content-Type');
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   if (req.isAuthenticated()) {
-    res.json({ authenticated: true, user: req.user });
+    res.status(200).json({ authenticated: true, user: req.user });
   } else {
-    res.json({ authenticated: false });
+    res.status(401).json({ authenticated: false });
   }
 }
 
