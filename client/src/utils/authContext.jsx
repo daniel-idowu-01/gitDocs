@@ -7,9 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`, {
+    fetch(`http://localhost:5000/api/auth/check-auth`, {
       method: "GET",
-      credentials: "include",
+      withCrentials: true,
     })
       .then((response) => {
         console.log('check-auth response', response)
