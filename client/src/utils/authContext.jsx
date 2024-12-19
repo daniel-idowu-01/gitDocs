@@ -13,12 +13,16 @@ export const AuthProvider = ({ children }) => {
     })
       .then((response) => {
         console.log('check-auth response', response)
-        response.json();
+        return response.json();
       })
       .then((data) => {
-        if (data.authenticated) {
+        console.log('check-auth data', data)
+        if (data?.authenticated) {
           setIsAuthenticated(true);
           setUser(data.user);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
         }
       })
       .catch((err) => console.error("Error checking auth status:", err));
