@@ -62,6 +62,20 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Auth middleware to deserialize user
+app.use(async (req, res, next) => {
+  console.log("Session user:", req.session);
+  if (req.session && req.session.userId) {
+    try {
+      const user = await User.findById(req.session.userId);
+      req.user = user;
+    } catch (err) {
+      console.error('Session user fetch error:', err);
+    }
+  }
+  next();
+});
+
 passport.use(
   new GitHubStrategy(
     {
@@ -110,6 +124,12 @@ passport.deserializeUser(async (id, done) => {
     console.error("Error deserializing user:", err);
     done(err, null);
   }
+});
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Expose-Headers', 'Set-Cookie');
+  next();
 });
 
 app.get("/", (req, res) => {
