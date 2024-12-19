@@ -20,7 +20,6 @@ const allowedOrigins = [
   `${process.env.BASE_URL}`,
   ,
 ];
-
 console.log("allowedOrigins", allowedOrigins)
 
 const corsOptions = {
