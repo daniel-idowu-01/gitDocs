@@ -10,6 +10,9 @@ export const AuthProvider = ({ children }) => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/check-auth`, {
       method: "GET",
       credentials: "include",
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
       .then((response) => {
         console.log('check-auth response', response)

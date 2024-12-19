@@ -60,6 +60,7 @@ const Header = () => {
 
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/docs`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

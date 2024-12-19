@@ -5,11 +5,12 @@ import dotenv from "dotenv";
 import passport from "passport";
 import session from "express-session";
 import { Strategy as GitHubStrategy } from "passport-github2";
+import MongoStore from "connect-mongo";
+import bcrypt from "bcrypt";
+
 import { authRoute, repoRoute, adminRoute } from "./routes/index.js";
 import { connectDB } from "./config/mongo.js";
 import { User } from "./models/index.js";
-import bcrypt from "bcrypt";
-import MongoStore from "connect-mongo";
 
 const app = express();
 dotenv.config();
@@ -18,7 +19,7 @@ await connectDB();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: 'https://getgitdocs.netlify.app',
     credentials: true,
   })
 );
@@ -34,7 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Configure session middleware
 app.use(
   session({
     secret: process.env.PASSPORT_SECRET,
@@ -42,10 +42,10 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_DB,
-      ttl: 14 * 24 * 60 * 60, // Sessions expire in 14 days
+      ttl: 14 * 24 * 60 * 60,
     }),
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
       secure: false,
       httpOnly: true,
       sameSite: "lax",
@@ -53,11 +53,9 @@ app.use(
   })
 );
 
-// Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// GitHub Strategy
 passport.use(
   new GitHubStrategy(
     {
@@ -68,7 +66,6 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         let user = await User.findOne({ email: profile.emails[0]?.value });
-
         if (!user) {
           const hashedPassword = await bcrypt.hash(
             profile.username,
@@ -84,7 +81,6 @@ passport.use(
             githubUsername: profile.username,
           });
         }
-
         return done(null, user);
       } catch (err) {
         return done(err, null);
@@ -93,13 +89,11 @@ passport.use(
   )
 );
 
-// Serialize user
 passport.serializeUser((user, done) => {
   console.log("serialized user id", user.id);
   done(null, user.id);
 });
 
-// Deserialize user
 passport.deserializeUser(async (id, done) => {
   console.log("Deserialize called with ID:", id);
   try {

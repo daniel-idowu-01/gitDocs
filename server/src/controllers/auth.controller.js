@@ -107,7 +107,7 @@ const login = async (req, res, next) => {
     if (!email || !password) {
       return next(errorHandler(400, "Email or password is required!"));
     }
-    
+
     user = await User.findOne({ email });
 
     if (!user) {
@@ -209,22 +209,26 @@ const confirmEmail = async (req, res, next) => {
 };
 
 const checkAuth = (req, res, next) => {
-  console.log("=== Check Auth Debug ===");
-  console.log("Session ID:", req.sessionID);
-  console.log("Full Session:", req.session);
-  console.log("Passport Session:", req.session?.passport);
-  console.log("User:", req.user);
-  console.log("Headers:", req.headers);
-  console.log("Cookies:", req.cookies);
+  try {
+    console.log("=== Check Auth Debug ===");
+    console.log("Session ID:", req.sessionID);
+    console.log("Full Session:", req.session);
+    console.log("Passport Session:", req.session?.passport);
+    console.log("User:", req.user);
+    console.log("Headers:", req.headers);
+    console.log("Cookies:", req.cookies);
 
-  res.setHeader("Content-Type", "application/json");
-  res.setHeader('Access-Control-Expose-Headers', 'Content-Type');
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  if (req.isAuthenticated()) {
-    res.status(200).json({ authenticated: true, user: req.user });
-  } else {
-    res.status(200).json({ authenticated: false });
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Access-Control-Expose-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    if (req.isAuthenticated()) {
+      res.status(200).json({ authenticated: true, user: req.user });
+    } else {
+      res.status(200).json({ authenticated: false });
+    }
+  } catch (error) {
+    next(error);
   }
-}
+};
 
 export { createUser, login, changePassword, confirmEmail, checkAuth };
