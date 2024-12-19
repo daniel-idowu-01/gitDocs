@@ -9,7 +9,6 @@ import { authRoute, repoRoute, adminRoute } from "./routes/index.js";
 import { connectDB } from "./config/mongo.js";
 import { User } from "./models/index.js";
 import bcrypt from "bcrypt";
-import { allow } from "joi";
 
 const app = express();
 dotenv.config();
