@@ -27,17 +27,19 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
   res.setHeader(
     "Content-Security-Policy",
     "default-src 'self'; font-src 'self' data:; img-src 'self' data:;"
   );
   next();
 });
+
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -56,7 +58,6 @@ app.use(
       secure: true,
       httpOnly: true,
       sameSite: "none",
-      domain: "onrender.com",
     },
   })
 );
@@ -72,7 +73,8 @@ passport.serializeUser((user, done) => {
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
-  onsole.log("Before deserializing ID:", id);
+  console.log("Before deserializing ID:", id);
+  console.log("ID type:", typeof id);
   try {
     console.log("Deserializing ID:", id);
     const user = await User.findById(id);
@@ -122,12 +124,6 @@ passport.use(
     }
   )
 );
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
-  next();
-});
 
 app.get("/", (req, res) => {
   res.send("App is running!");
