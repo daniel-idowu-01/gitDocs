@@ -210,6 +210,7 @@ const confirmEmail = async (req, res, next) => {
 
 const checkAuth = (req, res, next) => {
   res.setHeader("Content-Type", "application/json");
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Type');
   if (req.isAuthenticated()) {
     res.json({ authenticated: true, user: req.user });
   } else {
