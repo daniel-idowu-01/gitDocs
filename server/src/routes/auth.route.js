@@ -22,18 +22,9 @@ router.get(
 );
 router.get(
   "/github/callback",
-  passport.authenticate("github", {
-    failureRedirect: "/",
-    session: true,
-    failureMessage: true,
-  }),
+  passport.authenticate("github", { failureRedirect: "/", session: true }),
   (req, res) => {
-    console.log("=== GitHub Callback Debug ===");
-    console.log("User after auth:", req.user);
-    console.log("Session after auth:", req.session);
-    console.log("Is Authenticated:", req.isAuthenticated());
-    console.log("Session ID:", req.sessionID);
-
+    // Successful authentication, redirect or respond with user data
     res.redirect(`${process.env.FRONTEND_URL}`);
   }
 );

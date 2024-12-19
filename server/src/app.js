@@ -13,6 +13,8 @@ import bcrypt from "bcrypt";
 const app = express();
 dotenv.config();
 
+await connectDB();
+
 const allowedOrigins = [
   "http://localhost:5173",
   process.env.FRONTEND_URL,
@@ -28,6 +30,8 @@ const corsOptions = {
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
 };
 
 app.use(cors(corsOptions));
@@ -97,7 +101,7 @@ passport.use(
 
 // Serialize user
 passport.serializeUser((user, done) => {
-  done(null, user._id);
+  done(null, user.id);
 });
 
 // Deserialize user
@@ -106,11 +110,11 @@ passport.deserializeUser(async (id, done) => {
     const user = await User.findById(id);
     done(null, user);
   } catch (err) {
+    console.log('errrrrrrrrrr', err)
     done(err, null);
   }
 });
 
-await connectDB();
 
 app.get("/", (req, res) => {
   res.send("App is running!");
