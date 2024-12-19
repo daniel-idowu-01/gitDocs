@@ -41,12 +41,14 @@ app.use((req, res, next) => {
 
 app.use(
   session({
+    name: 'gitdocs.sid',
     secret: process.env.PASSPORT_SECRET,
     resave: false,
     saveUninitialized: false,
     proxy: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_DB,
+      collectionName: 'sessions',
       ttl: 14 * 24 * 60 * 60,
     }),
     cookie: {
@@ -64,12 +66,13 @@ app.use(passport.session());
 
 // Serialize user
 passport.serializeUser((user, done) => {
-  console.log("Serialize user:", user);
+  console.log("Serialize user:", user._id);
   done(null, user._id.toString());
 });
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
+  onsole.log("Before deserializing ID:", id);
   try {
     console.log("Deserializing ID:", id);
     const user = await User.findById(id);
