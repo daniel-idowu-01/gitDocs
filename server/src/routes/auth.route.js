@@ -24,9 +24,8 @@ router.get(
   "/github/callback",
   passport.authenticate("github", { failureRedirect: "/", session: true }),
   (req, res) => {
-    // Successful authentication, redirect or respond with user data
 
-    //Manually save session before redirect.
+    //Manually save session before redirect
     req.session.save(function () {
       res.redirect(`${process.env.FRONTEND_URL}`);
     });
