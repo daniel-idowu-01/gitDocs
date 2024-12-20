@@ -40,12 +40,18 @@ Gitdoc is a tool that can be used to generate comprehensive and user-friendly do
 
 2. Install dependencies:
    ```bash
+   cd client
+   npm install
+   ```
+   ```bash
+   cd server
    npm install
    ```
 
 3. Set up environment variables:
    Create a `.env` file in the root directory with the following:
    ```env
+   NODE_ENV=test
    PORT=3000
    MONGO_DB=your_mongo_connection_string
    GITHUB_TOKEN=your_personal_access_token
@@ -53,33 +59,23 @@ Gitdoc is a tool that can be used to generate comprehensive and user-friendly do
    SALT=test
    JWT_SECRET=jwtsecret
    EMAIL_JWT_SECRET=emailjwtsecret
+   GITHUB_CLIENT_ID=clientid
+   GITHUB_CLIENT_SECRET-clientsecret
+   PASSPORT_SECRET=secret
+   BASE_URL=base_url
+   FRONTEND_URL=frontend_url
+   COOKIE_NAME=cookie
    ```
 
-4. Start the server:
+4. Start the app:
    ```bash
    cd server
    npm run dev
    ```
-
-5. Access the app:
-   - API: [http://localhost:5173](http://localhost:5173)
-
----
-
-## API Endpoints
-
-### 1. **User Management**
-- `GET /api/users` - Retrieve all users.
-- `POST /api/users` - Add a new user.
-
-### 2. **Project Management**
-- `POST /api/projects` - Link a GitHub repository and initiate documentation generation.
-- `GET /api/projects` - List all projects.
-- `GET /api/projects/:id` - Get details of a specific project.
-
-### 3. **System Metrics**
-- `GET /api/metrics` - Retrieve system performance metrics.
-
+   ```bash
+   cd client
+   npm run dev
+   ```
 ---
 
 ## Roadmap
