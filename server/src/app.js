@@ -21,7 +21,7 @@ await connectDB();
 
 app.use(
   cors({
-    origin: "https://getgitdocs.netlify.app",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -43,19 +43,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    name: 'gitdocs.sid',
+    name: process.env.COOKIE_NAME,
     secret: process.env.PASSPORT_SECRET,
     resave: false,
     saveUninitialized: false,
     proxy: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_DB,
-      collectionName: 'sessions',
+      collectionName: "sessions",
       ttl: 14 * 24 * 60 * 60,
     }),
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: "none",
     },
@@ -84,7 +84,7 @@ passport.deserializeUser(async (id, done) => {
     console.log("Deserialized user:", user.email);
     return done(null, user);
   } catch (err) {
-    console.log('errrrrr', err)
+    console.log("errrrrr", err);
     return done(err);
   }
 });
