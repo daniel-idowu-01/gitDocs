@@ -30,14 +30,13 @@ const Login = () => {
       },
       body: JSON.stringify(formInput),
     })
-      .then((res) => {
+      .then(async (res) => {
+        const body = await res.json();
         if (!res.ok) {
-          if (res.status == 401) {
-            notifyCatchError(`Please confirm your email to login!`);
-          }
+          notifyCatchError(body.message);
         }
         setIsLoading(false);
-        return res.json();
+        return body;
       })
       .then((data) => {
         if (data.statusCode == 400) {
@@ -45,6 +44,7 @@ const Login = () => {
         }
 
         if (data.success) {
+          localStorage.setItem("token", data.message);
           notifySuccess();
           navigate("/admin", { replace: true });
         }

@@ -123,14 +123,19 @@ const login = async (req, res, next) => {
     if (!passwordMatch) {
       return next(errorHandler(400, "Wrong credentials!"));
     }
+ 
+    // for admin (will change later)
+    if(user.role !== 'admin') {
+      return next(errorHandler(401, "Admin only"));
+    }
 
     token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   maxAge: 30 * 24 * 60 * 60 * 1000,
+    // });
 
-    res.status(200).json({ success: true, message: "You are logged in!" });
+    res.status(200).json({ success: true, message: token });
   } catch (error) {
     next(error);
   }
