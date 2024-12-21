@@ -111,11 +111,10 @@ const Header = () => {
         })
         .then((data) => {
           setUserRepos(data.repos);
-          console.log("daa", data);
         })
         .catch((err) => {
           setIsRepoLoading(false);
-          console.log("Errrrrrrrrrr", err);
+          console.error("Errrrrrrrrrr", err);
         });
     } else {
       return null;

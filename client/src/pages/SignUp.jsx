@@ -45,7 +45,7 @@ const SignUp = () => {
       .catch((err) => {
         setIsLoading(false);
         notifyCatchError(`${err}`);
-        console.log("Errrrrrrrrrr", err);
+        console.error("Errrrrrrrrrr", err);
       });
   };
 
