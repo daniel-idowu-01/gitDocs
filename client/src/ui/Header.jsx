@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import Spinner from "./components/Spinner";
@@ -8,7 +8,9 @@ import Nav from "./Nav";
 import { AuthContext } from "../utils/authContext";
 
 const Header = () => {
+  const iframeRef = useRef(null);
   const [repoUrl, setRepoUrl] = useState("");
+  const [pdfUrl, setPdfUrl] = useState("");
   const [userRepos, setUserRepos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isRepoLoading, setIsRepoLoading] = useState(false);
@@ -21,14 +23,11 @@ const Header = () => {
   const notifySuccess = () =>
     toast.success("Documentation successfully generated!");
 
-  // Timer countdown logic with iterative extension
   useEffect(() => {
     if (isLoading) {
       const id = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
-
-      // Store the interval ID to clear it when needed
       setIntervalId(id);
     }
 
@@ -40,11 +39,10 @@ const Header = () => {
       setTimer(30);
     }
 
-    // Cleanup the interval when the timer is no longer active
     return () => {
       clearInterval(intervalId);
     };
-  }, [isLoading, timer]);
+  }, [isLoading]);
 
   const handleRepoUrl = (e) => {
     e.preventDefault();
@@ -78,7 +76,15 @@ const Header = () => {
       })
       .then((blob) => {
         const url = window.URL.createObjectURL(blob);
-        window.open(url, "_blank");
+        setPdfUrl(url);
+        if (iframeRef.current) {
+          iframeRef.current.onload = () => {
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+          };
+        }
       })
       .catch((error) => {
         setIsLoading(false);
@@ -213,6 +219,12 @@ const Header = () => {
           </div>
         )}
       </article>
+
+      <div
+        className={`${!pdfUrl ? "hidden" : "flex"} justify-center mt-10`}
+      >
+        <iframe ref={iframeRef} src={pdfUrl} width="100%" height="600px"></iframe>
+      </div>
     </main>
   );
 };
