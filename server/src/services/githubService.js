@@ -160,15 +160,13 @@ export default class GithubService {
   async getRepoCommits(repoUrl) {
     try {
       const { owner, repoName } = await this.extractRepoInfo(repoUrl);
-      const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/commits`, {
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/commits?per_page=100`, {
         headers: {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,
         },
       });
-      const repos = await response.json();
-      console.log("repos", repos)
-
-      return repos;
+      const repoCommits = await response.json();
+      return repoCommits;
     } catch (error) {
       console.log("rrr", error);
       return null;
