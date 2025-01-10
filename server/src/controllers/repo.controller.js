@@ -5,7 +5,12 @@ import {
   pdfGenerator,
   aiService,
 } from "../services/index.js";
-import { Repository, Documentation, GenerateRequest, User } from "../models/index.js";
+import {
+  Repository,
+  Documentation,
+  GenerateRequest,
+  User,
+} from "../models/index.js";
 
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -34,9 +39,8 @@ const generateDocumentation = async (req, res, next) => {
     const { repoUrl } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
-    
     const repoData = await githubService.getRepoData(owner, repoName);
-    
+
     if (!repoData) {
       return next(errorHandler(404, "Repository not found"));
     }
@@ -57,7 +61,7 @@ const generateDocumentation = async (req, res, next) => {
         );
         console.log("Documentation generated successfully");
         fullDocumentation += aiDocumentation + "\n";
-        
+
         await delay(1000);
       } catch (error) {
         if (error.status === 429) {
@@ -115,4 +119,37 @@ const getUserGithubRepos = async (req, res) => {
   }
 };
 
-export { createRepo, generateDocumentation, getUserGithubRepos };
+const getRepoCommit = async (req, res) => {
+  try {
+    const { repoUrl } = req.body;
+    const repoCommits = await githubService.getRepoCommits(repoUrl);
+    if (repoCommits) {
+      const totalCommits = repoCommits.length;
+      const commitsByCommitter = {};
+
+      // Process each commit
+      repoCommits.forEach((commit) => {
+        const committerEmail = commit.commit.committer.email;
+        const committerName = commit.commit.committer.name;
+        const committerKey = `${committerName} (${committerEmail})`;
+
+        // Count commits per committer
+        if (commitsByCommitter[committerKey]) {
+          commitsByCommitter[committerKey]++;
+        } else {
+          commitsByCommitter[committerKey] = 1;
+        }
+      });
+
+      return res
+        .status(200)
+        .json({ success: true, data: { totalCommits, commitsByCommitter } });
+    }
+
+    return res.status(200).json({ success: true, message: "No commits" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createRepo, generateDocumentation, getUserGithubRepos, getRepoCommit };

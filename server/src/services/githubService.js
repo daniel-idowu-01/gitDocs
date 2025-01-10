@@ -156,4 +156,22 @@ export default class GithubService {
       return null;
     }
   }
+
+  async getRepoCommits(repoUrl) {
+    try {
+      const { owner, repoName } = await this.extractRepoInfo(repoUrl);
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/commits`, {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        },
+      });
+      const repos = await response.json();
+      console.log("repos", repos)
+
+      return repos;
+    } catch (error) {
+      console.log("rrr", error);
+      return null;
+    }
+  }
 }
