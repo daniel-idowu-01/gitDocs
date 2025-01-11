@@ -3,11 +3,11 @@ import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../utils/authContext";
 import { formatTime } from "../utils/helpers";
-import Spinner from "./components/Spinner";
-import Nav from "./Nav";
+import Nav from "../ui/Nav";
+import Spinner from "../ui/components/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 
-const Header = () => {
+const RepoInsight = () => {
   const iframeRef = useRef(null);
   const [repoUrl, setRepoUrl] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
@@ -122,7 +122,7 @@ const Header = () => {
   };
 
   return (
-    <main className="text-white text-center px-2 min-h-screen pb-10">
+    <main className="bg-[#031f39] text-white text-center px-2 min-h-screen pb-10">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
@@ -137,21 +137,20 @@ const Header = () => {
         style={{ lineHeight: "3.5rem" }}
         className="relative text-3xl md:text-5xl font-bold mb-4 z-50"
       >
-        <span className="text-[#ff7f50]">Transform</span> Your GitHub
-        Repositories into <br />
-        Professional Documentation
+        <span className="text-[#ff7f50]">Unlock </span> detailed analytics and
+        metrics <br />
+        about your GitHub repository
       </h1>
       <p className="relative z-50 md:text-lg mb-8">
-        Turn your GitHub projects into polished, ready-to-share documentation
-        with just one click.
+        Track commits, contributors, and code activity to understand your
+        project's growth.
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
 
       {/* Generate Documentation Section */}
       <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
         <h2 className="text-xl md:text-2xl font-bold mb-2">
-          Generate Documentation For Your{" "}
-          <span className="underline">GitHub</span> Project
+          Visualize Repository Analytics and Activity
         </h2>
         <p className="text-gray-600 mb-4">
           No credit card required. <b>it's completely free!</b>
@@ -231,4 +230,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default RepoInsight;

@@ -1,5 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import { Home, AdminDashboard, Login, SignUp, NotFound } from "./pages";
+import {
+  Home,
+  AdminDashboard,
+  Login,
+  SignUp,
+  NotFound,
+  RepoInsight,
+} from "./pages";
 import ProtectedRoute from "./ui/components/ProtectedRoute";
 
 function App() {
@@ -7,6 +14,10 @@ function App() {
     <div className="montserrat-font">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/repo-insight" element={<RepoInsight />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="*" element={<NotFound />} />
         <Route
           path="/admin"
           element={
@@ -15,9 +26,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

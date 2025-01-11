@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../utils/authContext";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
@@ -12,13 +13,12 @@ const Nav = () => {
         </h1>
       </div>
       <div className="flex items-center space-x-4">
-        <a
-          href="https://github.com/daniel-idowu-01/gitDocs"
-          target="_blank"
+        <Link
+          to="/repo-insight"
           className="hidden md:block px-6 py-2 border border-[#ff7f50] hover:border-[#ff7f50cb] text-[#ff7f50] hover:text-[#ff7f50cb] rounded-full font-semibold"
         >
-          Contribute
-        </a>
+          Repo Insights
+        </Link>
         {/* <button href="#" className="text-gray-700 font-semibold">
           Log in
         </button> */}
