@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
-import Spinner from "./components/Spinner";
-import "react-toastify/dist/ReactToastify.css";
-import { formatTime } from "../utils/helpers";
-import Nav from "./Nav";
 import { AuthContext } from "../utils/authContext";
+import { formatTime } from "../utils/helpers";
+import Spinner from "./components/Spinner";
+import Nav from "./Nav";
+import Tab from "./Tab";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
   const iframeRef = useRef(null);
@@ -126,7 +127,8 @@ const Header = () => {
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
-      <div className="flex justify-center">
+      <div className="flex justify-center md:mt-10">
+        <Tab />
         <img
           className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
           src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
@@ -135,7 +137,7 @@ const Header = () => {
       </div>
       <h1
         style={{ lineHeight: "3.5rem" }}
-        className="relative text-3xl md:text-5xl font-bold mb-4 md:mt-20 z-50"
+        className="relative text-3xl md:text-5xl font-bold mb-4 z-50"
       >
         <span className="text-[#ff7f50]">Transform</span> Your GitHub
         Repositories into <br />
@@ -219,10 +221,13 @@ const Header = () => {
         )}
       </article>
 
-      <div
-        className={`${!pdfUrl ? "hidden" : "flex"} justify-center mt-10`}
-      >
-        <iframe ref={iframeRef} src={pdfUrl} width="100%" height="600px"></iframe>
+      <div className={`${!pdfUrl ? "hidden" : "flex"} justify-center mt-10`}>
+        <iframe
+          ref={iframeRef}
+          src={pdfUrl}
+          width="100%"
+          height="600px"
+        ></iframe>
       </div>
     </main>
   );
