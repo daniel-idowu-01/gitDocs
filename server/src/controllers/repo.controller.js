@@ -120,11 +120,12 @@ const getUserGithubRepos = async (req, res) => {
 };
 
 const getRepoCommit = async (req, res) => {
+  let totalCommits;
   try {
     const { repoUrl } = req.body;
     const repoCommits = await githubService.getRepoCommits(repoUrl);
     if (repoCommits) {
-      const totalCommits = repoCommits.length;
+      totalCommits = repoCommits.length;
       const commitsByCommitter = {};
 
       // Process each commit
@@ -140,6 +141,11 @@ const getRepoCommit = async (req, res) => {
           commitsByCommitter[committerKey] = 1;
         }
       });
+
+      if (commitsByCommitter["GitHub (noreply@github.com)"]) {
+        totalCommits -= commitsByCommitter["GitHub (noreply@github.com)"];
+        delete commitsByCommitter["GitHub (noreply@github.com)"];
+      }
 
       return res
         .status(200)
