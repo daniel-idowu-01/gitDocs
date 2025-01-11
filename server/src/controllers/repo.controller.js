@@ -10,6 +10,8 @@ import {
   Documentation,
   GenerateRequest,
   User,
+  Commit,
+  CountCommit,
 } from "../models/index.js";
 
 async function delay(ms) {
@@ -119,12 +121,22 @@ const getUserGithubRepos = async (req, res) => {
   }
 };
 
-const getRepoCommit = async (req, res) => {
+const getRepoCommit = async (req, res, next) => {
   let totalCommits;
   try {
     const { repoUrl } = req.body;
+
+    await CountCommit.findByIdAndUpdate(process.env.COMMIT_ID, {
+      $inc: { count: 1 },
+    });
+
     const repoCommits = await githubService.getRepoCommits(repoUrl);
     if (repoCommits) {
+      const repoInDB = await Commit.findOne({ repoUrl });
+      if (!repoInDB) {
+        await Commit.create({ repoUrl });
+      }
+
       totalCommits = repoCommits.length;
       const commitsByCommitter = {};
 
