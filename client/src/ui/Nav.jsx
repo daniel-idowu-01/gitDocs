@@ -7,8 +7,6 @@ const Nav = () => {
   const pathname = location.pathname;
   const { isAuthenticated, user } = useContext(AuthContext);
 
-  console.log(pathname);
-
   return (
     <nav className="flex justify-between items-center p-5 md:px-8">
       <div className="flex items-center">

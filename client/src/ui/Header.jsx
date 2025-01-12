@@ -23,6 +23,7 @@ const Header = () => {
   const notifySuccess = () =>
     toast.success("Documentation successfully generated!");
 
+  // useEffect is implemented for timer
   useEffect(() => {
     if (isLoading) {
       const id = setInterval(() => {
@@ -44,9 +45,9 @@ const Header = () => {
     };
   }, [isLoading]);
 
+  // function to generate documentation
   const handleRepoUrl = (e) => {
     e.preventDefault();
-
     const result = validateGithubUrl(repoUrl);
     if (!result.valid) {
       notifyError();
@@ -93,6 +94,7 @@ const Header = () => {
       });
   };
 
+  // function to search for user repos
   const searchUserRepos = () => {
     if (isAuthenticated) {
       setIsRepoLoading(true);
