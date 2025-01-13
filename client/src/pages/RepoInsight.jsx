@@ -1,15 +1,14 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../utils/authContext";
 import Nav from "../ui/Nav";
 import Spinner from "../ui/components/Spinner";
 import "react-toastify/dist/ReactToastify.css";
-
 import RepoChart from "../ui/components/RepoChart";
 
 const RepoInsight = () => {
-  const iframeRef = useRef(null);
+  const chartRef = useRef(null);
   const [commitData, setCommitData] = useState(null);
   const [repoUrl, setRepoUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,13 +39,16 @@ const RepoInsight = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          return Promise.reject("Failed to fetch");
+          if (response.status == 404) {
+            notifyCatchError(`Repository Not Found`);
+          } else {
+            return Promise.reject("Failed to fetch");
+          }
         }
         setIsLoading(false);
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setCommitData(data.data);
       })
       .catch((error) => {
@@ -56,11 +58,32 @@ const RepoInsight = () => {
       });
   };
 
+  useEffect(() => {
+    if (commitData && chartRef.current) {
+      console.log("Scrolling to chart...");
+      chartRef.current.scrollIntoView({ behavior: "smooth" });
+      console.log("Scrolled to chart:", chartRef.current);
+    } else {
+      console.log("Chart ref or commitData is null.");
+    }
+  }, [commitData]);
+
+  // Alternative scrolling
+  useEffect(() => {
+    if (commitData && chartRef.current) {
+      const chartPosition = chartRef.current.offsetTop;
+      window.scrollTo({
+        top: chartPosition,
+        behavior: "smooth",
+      });
+      console.log("Window scrolled to:", chartPosition);
+    }
+  }, [commitData]);
+
   return (
     <main className="bg-[#031f39] text-white text-center px-2 min-h-screen pb-10 hide-scrollbar">
       <ToastContainer />
       <Nav />
-      {/* Header Body Content */}
       <div className="flex justify-center md:mt-20">
         <img
           className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
@@ -82,7 +105,6 @@ const RepoInsight = () => {
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
 
-      {/* Get Insight Section */}
       <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
         <h2 className="text-xl md:text-2xl font-bold mb-2">
           Visualize Repository Analytics and Activity
@@ -91,34 +113,37 @@ const RepoInsight = () => {
           No credit card required. <b>it's completely free!</b>
         </p>
 
-        {/* Input Section */}
         <div className="mt-10">
           <label className="block text-left mb-2 font-semibold">
             Paste your GitHub repository link here
           </label>
           <input
             type="text"
-            className={` w-full p-2 py-3 border border-gray-300 rounded`}
+            className={`w-full p-2 py-3 border border-gray-300 rounded`}
             placeholder="https://github.com/username/project"
             value={repoUrl}
             onChange={(e) => setRepoUrl(e.target.value)}
           />
         </div>
 
-        {/* The button that sends the request */}
         <button
           disabled={!repoUrl.trim() || isLoading}
           onClick={handleRepoUrl}
           className={`${
             !repoUrl.trim() || isLoading ? "bg-[#e6e6e6]" : "bg-[#ff7f50]"
-          } w-full py-3  text-white rounded font-semibold flex items-center justify-center gap-2 mt-2`}
+          } w-full py-3 text-white rounded font-semibold flex items-center justify-center gap-2 mt-2`}
         >
           {isLoading && <Spinner />}
           {isLoading ? "Getting" : "Get Insight"}
         </button>
       </article>
 
-      <div className={`${!commitData ? "hidden" : "flex"} justify-center mt-10 z-50`}>
+      <div
+        ref={chartRef}
+        className={`${
+          !commitData ? "hidden" : "flex"
+        } justify-center mt-10 z-50`}
+      >
         {commitData && <RepoChart commitData={commitData} />}
       </div>
     </main>

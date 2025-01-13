@@ -186,6 +186,9 @@ export default class GithubService {
             page += 1;
           }
         } catch (error) {
+          if (error.status == 404) {
+            return { error: "Repository not found" };
+          }
           console.error(
             "Error fetching commits:",
             error.response?.data || error.message

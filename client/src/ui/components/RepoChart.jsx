@@ -1,5 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
+import "../../index.css"
 
 const RepoChart = ({ commitData }) => {
   console.log("Comits", commitData);
@@ -7,16 +8,25 @@ const RepoChart = ({ commitData }) => {
     title: commitData
       ? `Total Commits: ${commitData.totalCommits}`
       : "Loading...",
+    titleTextStyle: {
+      color: "#FFF",
+      fontSize: 18,
+      bold: true,
+      italic: false,
+      fontName: "Montserrat"
+    },
     pieHole: 0.4,
     is3D: true,
     pieStartAngle: 100,
+    backgroundColor: "transparent",
     sliceVisibilityThreshold: 0.02,
     legend: {
       position: "bottom",
       alignment: "center",
       textStyle: {
-        color: "#233238",
+        color: "#FFF",
         fontSize: 14,
+        fontName: "Montserrat",
       },
     },
     colors: ["#8AD1C2", "#9F8AD1", "#D18A99", "#BCD18A", "#D1C28A"],
@@ -44,12 +54,11 @@ const RepoChart = ({ commitData }) => {
   return (
     <div className="rounded-md z-50">
       <Chart
-      className="rounded-md"
         chartType="PieChart"
         data={transformCommitData()}
         options={options}
-        //   width={"100%"}
-        height={"400px"}
+        height={"700px"}
+        width={"700px"}
       />
     </div>
   );
