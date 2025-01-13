@@ -3,7 +3,6 @@ import { Chart } from "react-google-charts";
 import "../../index.css"
 
 const RepoChart = ({ commitData }) => {
-  console.log("Comits", commitData);
   const options = {
     title: commitData
       ? `Total Commits: ${commitData.totalCommits}`

@@ -60,11 +60,7 @@ const RepoInsight = () => {
 
   useEffect(() => {
     if (commitData && chartRef.current) {
-      console.log("Scrolling to chart...");
       chartRef.current.scrollIntoView({ behavior: "smooth" });
-      console.log("Scrolled to chart:", chartRef.current);
-    } else {
-      console.log("Chart ref or commitData is null.");
     }
   }, [commitData]);
 
@@ -76,7 +72,6 @@ const RepoInsight = () => {
         top: chartPosition,
         behavior: "smooth",
       });
-      console.log("Window scrolled to:", chartPosition);
     }
   }, [commitData]);
 
