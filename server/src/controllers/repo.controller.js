@@ -134,7 +134,6 @@ const getRepoCommit = async (req, res, next) => {
     if (repoCommits?.error) {
       return res.status(404).json({ success: false, data: repoCommits.error });
     }
-    console.log("repoCommits", repoCommits);
     if (repoCommits) {
       const repoInDB = await Commit.findOne({ repoUrl });
       if (!repoInDB) {
