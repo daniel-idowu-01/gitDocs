@@ -141,16 +141,63 @@ export default class GithubService {
   async getUserGithubRepos(url) {
     try {
       const parts = url.split("https://github.com/");
-      const owner = parts[1]
-      const response = await fetch(`https://api.github.com/users/${owner}/repos`, {
-        headers: {
-          Authorization: `token ${process.env.GITHUB_TOKEN}`,
-        },
-      });
+      const owner = parts[1];
+      const response = await fetch(
+        `https://api.github.com/users/${owner}/repos`,
+        {
+          headers: {
+            Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          },
+        }
+      );
       const repos = await response.json();
-      const repoUrls = repos.map(repo => repo.html_url);
+      const repoUrls = repos.map((repo) => repo.html_url);
 
       return repoUrls;
+    } catch (error) {
+      console.log("rrr", error);
+      return null;
+    }
+  }
+
+  async getRepoCommits(repoUrl) {
+    try {
+      let page = 1;
+      let hasMoreCommits = true;
+      const commits = [];
+      const { owner, repoName } = await this.extractRepoInfo(repoUrl);
+
+      while (hasMoreCommits) {
+        try {
+          const response = await axios.get(
+            `https://api.github.com/repos/${owner}/${repoName}/commits?per_page=100&page=${page}`,
+            {
+              headers: {
+                Authorization: `token ${process.env.GITHUB_TOKEN}`,
+              },
+            }
+          );
+
+          commits.push(...response.data);
+
+          if (response.data.length < 100) {
+            hasMoreCommits = false;
+          } else {
+            page += 1;
+          }
+        } catch (error) {
+          if (error.status == 404) {
+            return { error: "Repository not found" };
+          }
+          console.error(
+            "Error fetching commits:",
+            error.response?.data || error.message
+          );
+          break;
+        }
+      }
+
+      return commits;
     } catch (error) {
       console.log("rrr", error);
       return null;

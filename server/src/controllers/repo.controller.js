@@ -5,7 +5,14 @@ import {
   pdfGenerator,
   aiService,
 } from "../services/index.js";
-import { Repository, Documentation, GenerateRequest, User } from "../models/index.js";
+import {
+  Repository,
+  Documentation,
+  GenerateRequest,
+  User,
+  Commit,
+  CountCommit,
+} from "../models/index.js";
 
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -34,9 +41,8 @@ const generateDocumentation = async (req, res, next) => {
     const { repoUrl } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
-    
     const repoData = await githubService.getRepoData(owner, repoName);
-    
+
     if (!repoData) {
       return next(errorHandler(404, "Repository not found"));
     }
@@ -57,7 +63,7 @@ const generateDocumentation = async (req, res, next) => {
         );
         console.log("Documentation generated successfully");
         fullDocumentation += aiDocumentation + "\n";
-        
+
         await delay(1000);
       } catch (error) {
         if (error.status === 429) {
@@ -115,4 +121,57 @@ const getUserGithubRepos = async (req, res) => {
   }
 };
 
-export { createRepo, generateDocumentation, getUserGithubRepos };
+const getRepoCommit = async (req, res, next) => {
+  let totalCommits;
+  try {
+    const { repoUrl } = req.body;
+
+    await CountCommit.findByIdAndUpdate(process.env.COMMIT_ID, {
+      $inc: { count: 1 },
+    });
+
+    const repoCommits = await githubService.getRepoCommits(repoUrl);
+    if (repoCommits?.error) {
+      return res.status(404).json({ success: false, data: repoCommits.error });
+    }
+    console.log("repoCommits", repoCommits);
+    if (repoCommits) {
+      const repoInDB = await Commit.findOne({ repoUrl });
+      if (!repoInDB) {
+        await Commit.create({ repoUrl });
+      }
+
+      totalCommits = repoCommits.length;
+      const commitsByCommitter = {};
+
+      // Process each commit
+      repoCommits.forEach((commit) => {
+        const committerEmail = commit.commit.committer.email;
+        const committerName = commit.commit.committer.name;
+        const committerKey = `${committerName} (${committerEmail})`;
+
+        // Count commits per committer
+        if (commitsByCommitter[committerKey]) {
+          commitsByCommitter[committerKey]++;
+        } else {
+          commitsByCommitter[committerKey] = 1;
+        }
+      });
+
+      if (commitsByCommitter["GitHub (noreply@github.com)"]) {
+        totalCommits -= commitsByCommitter["GitHub (noreply@github.com)"];
+        delete commitsByCommitter["GitHub (noreply@github.com)"];
+      }
+
+      return res
+        .status(200)
+        .json({ success: true, data: { totalCommits, commitsByCommitter } });
+    }
+
+    return res.status(200).json({ success: true, message: "No commits" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createRepo, generateDocumentation, getUserGithubRepos, getRepoCommit };
