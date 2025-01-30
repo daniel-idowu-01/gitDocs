@@ -124,7 +124,7 @@ const Header = () => {
   };
 
   return (
-    <main className="text-white text-center px-2 min-h-screen pb-10">
+    <main className="text-white text-center px-2 pb-10">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
@@ -139,7 +139,7 @@ const Header = () => {
         style={{ lineHeight: "3.5rem" }}
         className="relative text-3xl md:text-5xl font-bold mb-4 z-50"
       >
-        <span className="text-[#ff7f50]">Transform</span> Your GitHub
+        Transform Your GitHub
         Repositories into <br />
         Professional Documentation
       </h1>
