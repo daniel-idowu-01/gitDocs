@@ -7,6 +7,7 @@ import Spinner from "./components/Spinner";
 import InsightIcon from "./components/InsightIcon";
 import DocsIcons from "./components/DocsIcons";
 import GenerateDocumentation from "./components/GenerateDocumentation";
+import RepoInsight from "../pages/RepoInsight";
 import Nav from "./Nav";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -20,7 +21,7 @@ const Header = () => {
   const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
   const { isAuthenticated, user } = useContext(AuthContext);
-  const [active, setActive] = useState("doc");
+  const [active, setActive] = useState("docs");
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
@@ -174,17 +175,23 @@ const Header = () => {
         </article>
       </section>
 
-      {/* Generate Documentation Section */}
-      <GenerateDocumentation
-        searchUserRepos={searchUserRepos}
-        setRepoUrl={setRepoUrl}
-        repoUrl={repoUrl}
-        userRepos={userRepos}
-        isRepoLoading={isRepoLoading}
-        isLoading={isLoading}
-        handleRepoUrl={handleRepoUrl}
-        timer={timer}
-      />
+      {/* Generate Documentation & Repository Insight Section */}
+      {active == "docs" ? (
+        <GenerateDocumentation
+          searchUserRepos={searchUserRepos}
+          setRepoUrl={setRepoUrl}
+          repoUrl={repoUrl}
+          userRepos={userRepos}
+          isRepoLoading={isRepoLoading}
+          isLoading={isLoading}
+          handleRepoUrl={handleRepoUrl}
+          timer={timer}
+        />
+      ) : (
+        <RepoInsight />
+      )}
+
+      {/* Footer */}
 
       <div className={`${!pdfUrl ? "hidden" : "flex"} justify-center mt-10`}>
         <iframe

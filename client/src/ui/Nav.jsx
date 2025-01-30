@@ -34,7 +34,7 @@ const Nav = () => {
           <div className="shadow-2xl hover:cursor-pointer">
             <a
               href={`${import.meta.env.VITE_BACKEND_URL}/api/auth/github`}
-              className="px-4 md:px-6 py-2 text-xs sm:text-base border bg-gray-200 hover:bg-[#ffffffb4] text-[#031f39] border-gray-200 hover:border-[#ffffffb4] rounded-full font-semibold"
+              className="px-4 md:px-6 py-3 text-xs sm:text-base bg-gray-200 hover:bg-[#ffffffb4] text-[#031f39] rounded-full font-semibold"
             >
               Connect Github
             </a>
