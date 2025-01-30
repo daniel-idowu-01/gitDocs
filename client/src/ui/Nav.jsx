@@ -17,7 +17,7 @@ const Nav = () => {
       <div className="flex items-center space-x-4">
         <Link
           to={pathname == "/" ? "/repo-insight" : "/"}
-          className="hidden md:block px-6 py-2 border border-[#fff] hover:border-[#ffffffb4] text-[#fff] hover:text-[#ffffffb4] rounded-full font-semibold"
+          className="hidden md:block px-6 py-2 border border-gray-200 hover:border-[#ffffffb4] text-gray-200 hover:text-[#ffffffb4] rounded-full font-semibold"
         >
           {pathname == "/" ? "Repo Insights" : "Documentation"}
         </Link>
@@ -34,7 +34,7 @@ const Nav = () => {
           <div className="shadow-2xl hover:cursor-pointer">
             <a
               href={`${import.meta.env.VITE_BACKEND_URL}/api/auth/github`}
-              className="px-4 md:px-6 py-2 text-xs sm:text-base border bg-[#fff] hover:bg-[#ffffffb4] text-[#031f39] border-[#fff] hover:border-[#ffffffb4] rounded-full font-semibold"
+              className="px-4 md:px-6 py-2 text-xs sm:text-base border bg-gray-200 hover:bg-[#ffffffb4] text-[#031f39] border-gray-200 hover:border-[#ffffffb4] rounded-full font-semibold"
             >
               Connect Github
             </a>

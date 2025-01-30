@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../utils/authContext";
 import { formatTime } from "../utils/helpers";
 import Spinner from "./components/Spinner";
+import Star from "./components/Star";
 import Nav from "./Nav";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -124,28 +125,27 @@ const Header = () => {
   };
 
   return (
-    <main className="text-white text-center px-2 pb-10">
+    <main className=" text-center px-2 pb-10 max-h-screen bgg text-gray-200">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
       <div className="flex justify-center md:mt-20">
-        <img
+        {/* <img
           className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
           src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
           alt=""
-        />
+        /> */}
       </div>
       <h1
         style={{ lineHeight: "3.5rem" }}
-        className="relative text-3xl md:text-5xl font-bold mb-4 z-50"
+        className="relative text-3xl md:text-4xl font-bold mb-4 z-50 text-gra"
       >
-        Transform Your GitHub
-        Repositories into <br />
-        Professional Documentation
+        Automate Your Repo Documentation & Gain Actionable Insights
       </h1>
-      <p className="relative z-50 md:text-lg mb-8">
-        Turn your GitHub projects into polished, ready-to-share documentation
-        with just one click.
+      <p className="relative z-50 md:text-xl mb-8 sm:w-[65%] mx-auto">
+        Seamlessly generate comprehensive documentation and deep insights for
+        any GitHub repository. Simplify onboarding, enhance project
+        transparency, and track key repository metrics—all in one place
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
 
@@ -169,10 +169,11 @@ const Header = () => {
             onFocus={searchUserRepos}
             className={`${
               !isRepoLoading == false && "mb-4"
-            } w-full p-2 py-3 border border-gray-300 rounded`}
+            } w-full p-2 py-3 border border-gray-300 rounded outline-none`}
             placeholder="https://github.com/username/project"
             value={repoUrl}
             onChange={(e) => setRepoUrl(e.target.value)}
+            autoFocus
           />
         </div>
 
