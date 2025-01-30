@@ -10,17 +10,11 @@ const Nav = () => {
   return (
     <nav className="flex justify-between items-center p-5 md:px-20 sm:py-6">
       <div className="flex items-center">
-        <h1 className="pacifico-font text-4xl text-[#ff7f50] tracking-widest">
+        <h1 className="pacifico-font text-2xl sm:text-4xl text-[#ff7f50] tracking-widest">
           gitdocs
         </h1>
       </div>
       <div className="flex items-center space-x-4">
-        <Link
-          to={pathname == "/" ? "/repo-insight" : "/"}
-          className="hidden md:block px-6 py-2 border border-gray-200 hover:border-[#ffffffb4] text-gray-200 hover:text-[#ffffffb4] rounded-full font-semibold"
-        >
-          {pathname == "/" ? "Repo Insights" : "Documentation"}
-        </Link>
         {/* <button href="#" className="text-gray-700 font-semibold">
           Log in
         </button> */}

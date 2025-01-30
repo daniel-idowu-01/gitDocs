@@ -92,13 +92,15 @@ const RepoInsight = () => {
           </label>
           <input
             type="text"
-            className={`w-full p-2 py-3 border border-gray-300 rounded`}
+            className={`w-full p-2 py-3 border border-gray-300 rounded mb-4`}
             placeholder="https://github.com/username/project"
             value={repoUrl}
             onChange={(e) => setRepoUrl(e.target.value)}
+            autoFocus
           />
         </div>
 
+        {/* The button that sends the request */}
         <button
           disabled={!repoUrl.trim() || isLoading}
           onClick={handleRepoUrl}

@@ -71,7 +71,7 @@ const GenerateDocumentation = ({
         onClick={handleRepoUrl}
         className={`${
           !repoUrl.trim() || isLoading ? "bg-[#e6e6e6]" : "bg-[#ff7f50]"
-        } w-full py-3  text-white rounded font-semibold flex items-center justify-center gap-2`}
+        } w-full py-3 text-white rounded font-semibold flex items-center justify-center gap-2`}
       >
         {isLoading && <Spinner />}
         {isLoading ? "Generating" : "Generate"}
