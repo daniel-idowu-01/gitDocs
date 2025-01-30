@@ -6,7 +6,7 @@ const Home = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
 
   return (
-    <div className="bg-[#031f39]">
+    <div>
       <Header />
     </div>
   );

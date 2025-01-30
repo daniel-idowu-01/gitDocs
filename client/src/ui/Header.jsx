@@ -4,6 +4,10 @@ import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../utils/authContext";
 import { formatTime } from "../utils/helpers";
 import Spinner from "./components/Spinner";
+import InsightIcon from "./components/InsightIcon";
+import DocsIcons from "./components/DocsIcons";
+import GenerateDocumentation from "./components/GenerateDocumentation";
+import RepoInsight from "../pages/RepoInsight";
 import Nav from "./Nav";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,6 +21,7 @@ const Header = () => {
   const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
   const { isAuthenticated, user } = useContext(AuthContext);
+  const [active, setActive] = useState("docs");
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
@@ -124,102 +129,69 @@ const Header = () => {
   };
 
   return (
-    <main className="text-white text-center px-2 min-h-screen pb-10">
+    <main className="text-center px-2 pb-10 bgg text-gray-200">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
-      <div className="flex justify-center md:mt-20">
-        <img
+      <div className="flex justify-center mt-10 md:mt-20">
+        {/* <img
           className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
           src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
           alt=""
-        />
+        /> */}
       </div>
       <h1
-        style={{ lineHeight: "3.5rem" }}
-        className="relative text-3xl md:text-5xl font-bold mb-4 z-50"
+        style={{ lineHeight: "3rem" }}
+        className="relative text-3xl md:text-4xl font-bold mb-4 z-50 text-gray-200"
       >
-        <span className="text-[#ff7f50]">Transform</span> Your GitHub
-        Repositories into <br />
-        Professional Documentation
+        Automate Your Repo Documentation & Gain Actionable Insights
       </h1>
-      <p className="relative z-50 md:text-lg mb-8">
-        Turn your GitHub projects into polished, ready-to-share documentation
-        with just one click.
+      <p className="relative z-50 md:text-xl mb-8 w-[90%] sm:w-[65%] mx-auto">
+        Seamlessly generate comprehensive documentation and deep insights for
+        any GitHub repository. Simplify onboarding, enhance project
+        transparency, and track key repository metrics—all in one place
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
 
-      {/* Generate Documentation Section */}
-      <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
-        <h2 className="text-xl md:text-2xl font-bold mb-2">
-          Generate Documentation For Your{" "}
-          <span className="underline">GitHub</span> Project
-        </h2>
-        <p className="text-gray-600 mb-4">
-          No credit card required. <b>it's completely free!</b>
-        </p>
-
-        {/* Input Section */}
-        <div className="mt-10">
-          <label className="block text-left mb-2 font-semibold">
-            Paste your GitHub repository link here
-          </label>
-          <input
-            type="text"
-            onFocus={searchUserRepos}
-            className={`${
-              !isRepoLoading == false && "mb-4"
-            } w-full p-2 py-3 border border-gray-300 rounded`}
-            placeholder="https://github.com/username/project"
-            value={repoUrl}
-            onChange={(e) => setRepoUrl(e.target.value)}
-          />
-        </div>
-
-        {/* This section shows when the user's repos has been fetched */}
-        <div
+      {/* docs & insights links */}
+      <section className="flex items-center gap-5 justify-center">
+        <article
           className={`${
-            userRepos?.length > 0 && "h-60 overflow-scroll hide-scrollbar"
-          } flex flex-col divide-y-2 mb-4 text-left text-sm `}
+            active == "docs" && "border-2 border-[#ff7f50]"
+          } text-[#031f39] bg-white flex items-center gap-1  hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4`}
+          onClick={() => setActive("docs")}
         >
-          {isRepoLoading ? (
-            <span className="mx-auto">
-              <Spinner />
-            </span>
-          ) : (
-            Array.isArray(userRepos) &&
-            userRepos.map((repo, index) => (
-              <article key={index} className="px-4 py-2 underline">
-                <p
-                  className="hover:cursor-pointer"
-                  onClick={() => setRepoUrl(repo)}
-                >
-                  {repo}
-                </p>
-              </article>
-            ))
-          )}
-        </div>
-
-        {/* The button that sends the request */}
-        <button
-          disabled={!repoUrl.trim() || isLoading}
-          onClick={handleRepoUrl}
+          <DocsIcons />
+          <p className="font-bold">Docs</p>
+        </article>
+        <article
           className={`${
-            !repoUrl.trim() || isLoading ? "bg-[#e6e6e6]" : "bg-[#ff7f50]"
-          } w-full py-3  text-white rounded font-semibold flex items-center justify-center gap-2`}
+            active == "insight" && "border-2 border-[#ff7f50]"
+          } text-[#031f39] bg-white flex items-center gap-1  hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4`}
+          onClick={() => setActive("insight")}
         >
-          {isLoading && <Spinner />}
-          {isLoading ? "Generating" : "Generate"}
-        </button>
+          <InsightIcon />
+          <p className="text-[#031f39] font-bold">Insight</p>
+        </article>
+      </section>
 
-        {/* Timer Display */}
-        {isLoading && (
-          <div className="mt-4 text-sm">
-            Your documentation will be generated in: {formatTime(timer)}
-          </div>
-        )}
-      </article>
+      {/* Generate Documentation & Repository Insight Section */}
+      {active == "docs" ? (
+        <GenerateDocumentation
+          searchUserRepos={searchUserRepos}
+          setRepoUrl={setRepoUrl}
+          repoUrl={repoUrl}
+          userRepos={userRepos}
+          isRepoLoading={isRepoLoading}
+          isLoading={isLoading}
+          handleRepoUrl={handleRepoUrl}
+          timer={timer}
+        />
+      ) : (
+        <RepoInsight />
+      )}
+
+      {/* Footer */}
 
       <div className={`${!pdfUrl ? "hidden" : "flex"} justify-center mt-10`}>
         <iframe

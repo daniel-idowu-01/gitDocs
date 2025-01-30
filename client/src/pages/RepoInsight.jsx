@@ -76,30 +76,8 @@ const RepoInsight = () => {
   }, [commitData]);
 
   return (
-    <main className="bg-[#031f39] text-white text-center px-2 min-h-screen pb-10 hide-scrollbar">
+    <main className="bg-[#031f39] text-white text-center px-2 pb-10 hide-scrollbar mt-5">
       <ToastContainer />
-      <Nav />
-      <div className="flex justify-center md:mt-20">
-        <img
-          className="absolute mx-auto top-32 w-[40rem] z-10 opacity-50 brightness-150"
-          src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-          alt=""
-        />
-      </div>
-      <h1
-        style={{ lineHeight: "3.5rem" }}
-        className="relative text-3xl md:text-5xl font-bold mb-4 z-50"
-      >
-        <span className="text-[#ff7f50]">Unlock </span> detailed analytics and
-        metrics <br />
-        about your GitHub repository
-      </h1>
-      <p className="relative z-50 md:text-lg mb-8">
-        Track commits, contributors, and code activity to understand your
-        project's growth.
-      </p>
-      <div className="flex justify-center space-x-4 mb-5"></div>
-
       <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
         <h2 className="text-xl md:text-2xl font-bold mb-2">
           Visualize Repository Analytics and Activity
@@ -114,13 +92,15 @@ const RepoInsight = () => {
           </label>
           <input
             type="text"
-            className={`w-full p-2 py-3 border border-gray-300 rounded`}
+            className={`w-full p-2 py-3 border border-gray-300 rounded mb-4`}
             placeholder="https://github.com/username/project"
             value={repoUrl}
             onChange={(e) => setRepoUrl(e.target.value)}
+            autoFocus
           />
         </div>
 
+        {/* The button that sends the request */}
         <button
           disabled={!repoUrl.trim() || isLoading}
           onClick={handleRepoUrl}
