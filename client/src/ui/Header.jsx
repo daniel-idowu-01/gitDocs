@@ -6,6 +6,7 @@ import { formatTime } from "../utils/helpers";
 import Spinner from "./components/Spinner";
 import InsightIcon from "./components/InsightIcon";
 import DocsIcons from "./components/DocsIcons";
+import GenerateDocumentation from "./components/GenerateDocumentation";
 import Nav from "./Nav";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -19,6 +20,7 @@ const Header = () => {
   const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
   const { isAuthenticated, user } = useContext(AuthContext);
+  const [active, setActive] = useState("doc");
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
@@ -150,90 +152,39 @@ const Header = () => {
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
 
-      {/*  */}
+      {/* docs & insights links */}
       <section className="flex items-center gap-5 justify-center">
-        <article className="flex items-center gap-1 bg-white hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4">
+        <article
+          className={`${
+            active == "docs" && "border-2 border-[#ff7f50]"
+          } text-[#031f39] bg-white flex items-center gap-1  hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4`}
+          onClick={() => setActive("docs")}
+        >
           <DocsIcons />
-          <p className="text-[#031f39] font-bold">Docs</p>
+          <p className="font-bold">Docs</p>
         </article>
-        <article className="flex items-center gap-1 bg-white hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4">
+        <article
+          className={`${
+            active == "insight" && "border-2 border-[#ff7f50]"
+          } text-[#031f39] bg-white flex items-center gap-1  hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4`}
+          onClick={() => setActive("insight")}
+        >
           <InsightIcon />
           <p className="text-[#031f39] font-bold">Insight</p>
         </article>
       </section>
 
       {/* Generate Documentation Section */}
-      <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto mt-5">
-        <h2 className="text-xl md:text-2xl font-bold mb-2">
-          Generate Documentation For Your{" "}
-          <span className="underline">GitHub</span> Project
-        </h2>
-        <p className="text-gray-600 mb-4">
-          No credit card required. <b>it's completely free!</b>
-        </p>
-
-        {/* Input Section */}
-        <div className="mt-10">
-          <label className="block text-left mb-2 font-semibold">
-            Paste your GitHub repository link here
-          </label>
-          <input
-            type="text"
-            onFocus={searchUserRepos}
-            className={`${
-              !isRepoLoading == false && "mb-4"
-            } w-full p-2 py-3 border border-gray-300 rounded outline-none`}
-            placeholder="https://github.com/username/project"
-            value={repoUrl}
-            onChange={(e) => setRepoUrl(e.target.value)}
-            autoFocus
-          />
-        </div>
-
-        {/* This section shows when the user's repos has been fetched */}
-        <div
-          className={`${
-            userRepos?.length > 0 && "h-60 overflow-scroll hide-scrollbar"
-          } flex flex-col divide-y-2 mb-4 text-left text-sm `}
-        >
-          {isRepoLoading ? (
-            <span className="mx-auto">
-              <Spinner />
-            </span>
-          ) : (
-            Array.isArray(userRepos) &&
-            userRepos.map((repo, index) => (
-              <article key={index} className="px-4 py-2 underline">
-                <p
-                  className="hover:cursor-pointer"
-                  onClick={() => setRepoUrl(repo)}
-                >
-                  {repo}
-                </p>
-              </article>
-            ))
-          )}
-        </div>
-
-        {/* The button that sends the request */}
-        <button
-          disabled={!repoUrl.trim() || isLoading}
-          onClick={handleRepoUrl}
-          className={`${
-            !repoUrl.trim() || isLoading ? "bg-[#e6e6e6]" : "bg-[#ff7f50]"
-          } w-full py-3  text-white rounded font-semibold flex items-center justify-center gap-2`}
-        >
-          {isLoading && <Spinner />}
-          {isLoading ? "Generating" : "Generate"}
-        </button>
-
-        {/* Timer Display */}
-        {isLoading && (
-          <div className="mt-4 text-sm">
-            Your documentation will be generated in: {formatTime(timer)}
-          </div>
-        )}
-      </article>
+      <GenerateDocumentation
+        searchUserRepos={searchUserRepos}
+        setRepoUrl={setRepoUrl}
+        repoUrl={repoUrl}
+        userRepos={userRepos}
+        isRepoLoading={isRepoLoading}
+        isLoading={isLoading}
+        handleRepoUrl={handleRepoUrl}
+        timer={timer}
+      />
 
       <div className={`${!pdfUrl ? "hidden" : "flex"} justify-center mt-10`}>
         <iframe
