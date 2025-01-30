@@ -6,7 +6,7 @@ const Home = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
 
   return (
-    <div className="bggg">
+    <div>
       <Header />
     </div>
   );

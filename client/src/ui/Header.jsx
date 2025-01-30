@@ -4,7 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../utils/authContext";
 import { formatTime } from "../utils/helpers";
 import Spinner from "./components/Spinner";
-import Star from "./components/Star";
+import InsightIcon from "./components/InsightIcon";
+import DocsIcons from "./components/DocsIcons";
 import Nav from "./Nav";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -125,7 +126,7 @@ const Header = () => {
   };
 
   return (
-    <main className=" text-center px-2 pb-10 max-h-screen bgg text-gray-200">
+    <main className="text-center px-2 pb-10 bgg text-gray-200">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
@@ -149,8 +150,20 @@ const Header = () => {
       </p>
       <div className="flex justify-center space-x-4 mb-5"></div>
 
+      {/*  */}
+      <section className="flex items-center gap-5 justify-center">
+        <article className="flex items-center gap-1 bg-white hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4">
+          <DocsIcons />
+          <p className="text-[#031f39] font-bold">Docs</p>
+        </article>
+        <article className="flex items-center gap-1 bg-white hover:bg-gray-200 hover:cursor-pointer rounded-2xl px-6 py-4">
+          <InsightIcon />
+          <p className="text-[#031f39] font-bold">Insight</p>
+        </article>
+      </section>
+
       {/* Generate Documentation Section */}
-      <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto">
+      <article className="relative z-50 bg-white text-[#031f39] rounded-2xl p-10 max-w-2xl mx-auto mt-5">
         <h2 className="text-xl md:text-2xl font-bold mb-2">
           Generate Documentation For Your{" "}
           <span className="underline">GitHub</span> Project
