@@ -10,6 +10,7 @@ import GenerateDocumentation from "./components/GenerateDocumentation";
 import RepoInsight from "../pages/RepoInsight";
 import Nav from "./Nav";
 import "react-toastify/dist/ReactToastify.css";
+import { SwitchTransition, CSSTransition } from "react-transition-group";
 
 const Header = () => {
   const iframeRef = useRef(null);
@@ -129,7 +130,7 @@ const Header = () => {
   };
 
   return (
-    <main className="text-center px-2 pb-10 bgg text-gray-200">
+    <main className="background-image-url text-center px-2 pb-10 text-gray-200">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
@@ -176,20 +177,31 @@ const Header = () => {
       </section>
 
       {/* Generate Documentation & Repository Insight Section */}
-      {active == "docs" ? (
-        <GenerateDocumentation
-          searchUserRepos={searchUserRepos}
-          setRepoUrl={setRepoUrl}
-          repoUrl={repoUrl}
-          userRepos={userRepos}
-          isRepoLoading={isRepoLoading}
-          isLoading={isLoading}
-          handleRepoUrl={handleRepoUrl}
-          timer={timer}
-        />
-      ) : (
-        <RepoInsight />
-      )}
+      <SwitchTransition mode="out-in">
+        <CSSTransition
+          key={active}
+          timeout={300}
+          classNames="fade"
+          unmountOnExit
+        >
+          <div className="transition-container">
+            {active === "docs" ? (
+              <GenerateDocumentation
+                searchUserRepos={searchUserRepos}
+                setRepoUrl={setRepoUrl}
+                repoUrl={repoUrl}
+                userRepos={userRepos}
+                isRepoLoading={isRepoLoading}
+                isLoading={isLoading}
+                handleRepoUrl={handleRepoUrl}
+                timer={timer}
+              />
+            ) : (
+              <RepoInsight />
+            )}
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
 
       {/* Footer */}
 
