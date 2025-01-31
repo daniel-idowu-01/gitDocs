@@ -130,7 +130,7 @@ const Header = () => {
   };
 
   return (
-    <main className="text-center px-2 pb-10 bgg text-gray-200">
+    <main className="background-image-url text-center px-2 pb-10 text-gray-200">
       <ToastContainer />
       <Nav />
       {/* Header Body Content */}
