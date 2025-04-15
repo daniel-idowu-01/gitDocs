@@ -10,14 +10,22 @@ const Nav = () => {
   return (
     <nav className="flex justify-between items-center p-5 md:px-20 sm:py-6">
       <div className="flex items-center">
-        <h1 className="pacifico-font text-2xl sm:text-4xl text-[#ff7f50] tracking-widest">
+        <Link
+          to="/"
+          className="pacifico-font text-2xl sm:text-4xl text-[#ff7f50] tracking-widest"
+        >
           gitdocs
-        </h1>
+        </Link>
       </div>
       <div className="flex items-center space-x-4">
-        {/* <button href="#" className="text-gray-700 font-semibold">
-          Log in
-        </button> */}
+        {pathname !== "/generate-readme" && (
+          <Link
+            to="/generate-readme"
+            className="hidden sm:block px-4 py-2 bg-gradient-to-r from-[#ff7f50] to-[#ff6347] hover:from-[#ff6347] hover:to-[#ff7f50] text-white rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            Generate README
+          </Link>
+        )}
         {isAuthenticated ? (
           <img
             src={user?.profileUrl || user?.githubProfileUrl}

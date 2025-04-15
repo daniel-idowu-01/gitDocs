@@ -38,7 +38,7 @@ const generateDocumentation = async (req, res, next) => {
     });
 
     // let userId = req.user.id;
-    const { repoUrl } = req.body;
+    const { repoUrl, method } = req.body;
     const { owner, repoName } = await githubService.extractRepoInfo(repoUrl);
 
     const repoData = await githubService.getRepoData(owner, repoName);
@@ -95,13 +95,24 @@ const generateDocumentation = async (req, res, next) => {
     // Convert repo (Markdown) to HTML
     //const repoHtml = await markdownService.convertMarkdownToHTML(fullDocumentation);
 
-    // Generate PDF
-    const pdf = await pdfGenerator.generatePDF(fullDocumentation);
+    if (method === "repo") {
+      // Generate PDF
+      const pdf = await pdfGenerator.generatePDF(fullDocumentation);
 
-    // Return the PDF or HTML as response
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "inline; filename=documentation.pdf");
-    res.send(pdf);
+      // Return the PDF or HTML as response
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        "inline; filename=documentation.pdf"
+      );
+      res.send(pdf);
+    } else {
+      const readme = await aiService.generateReadme(fullDocumentation);
+      res.json({
+        success: true,
+        readme: readme,
+      });
+    }
   } catch (error) {
     next(error);
   }

@@ -6,6 +6,7 @@ import {
   SignUp,
   NotFound,
   RepoInsight,
+  GenerateReadme,
 } from "./pages";
 import ProtectedRoute from "./ui/components/ProtectedRoute";
 
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/repo-insight" element={<RepoInsight />} />
+        <Route path="/generate-readme" element={<GenerateReadme />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="*" element={<NotFound />} />
