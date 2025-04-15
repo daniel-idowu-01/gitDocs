@@ -71,6 +71,7 @@ const Header = () => {
       },
       body: JSON.stringify({
         repoUrl,
+        method: "repo",
       }),
     })
       .then((response) => {
