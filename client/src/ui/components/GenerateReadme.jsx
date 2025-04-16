@@ -8,7 +8,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 
 const GenerateReadme = () => {
   const readmeRef = useRef(null);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(120);
   const [repoUrl, setRepoUrl] = useState("");
   const [userRepos, setUserRepos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +61,7 @@ const GenerateReadme = () => {
     }
 
     setIsLoading(true);
-    setTimer(10);
+    setTimer(120);
 
     try {
       const response = await fetch(
