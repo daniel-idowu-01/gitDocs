@@ -1,20 +1,14 @@
 import Nav from "../Nav";
-import Spinner from "./Spinner";
-import DocsIcons from "./DocsIcons";
-import InsightIcon from "./InsightIcon";
 import "react-toastify/dist/ReactToastify.css";
-import { formatTime } from "../../utils/helpers";
-import RepoInsight from "../../pages/RepoInsight";
 import { AuthContext } from "../../utils/authContext";
 import { ToastContainer, toast } from "react-toastify";
 import { validateGithubUrl } from "../../utils/helpers";
 import GenerateDocumentation from "./GenerateDocumentation";
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { SwitchTransition, CSSTransition } from "react-transition-group";
 
 const GenerateReadme = () => {
   const readmeRef = useRef(null);
-  const [timer, setTimer] = useState(120);
+  const [timer, setTimer] = useState(10);
   const [repoUrl, setRepoUrl] = useState("");
   const [userRepos, setUserRepos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,28 +19,29 @@ const GenerateReadme = () => {
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
-  const notifySuccess = () =>
-    toast.success("Documentation successfully generated!");
+  const notifySuccess = () => toast.success("README generated successfully!");
 
   // useEffect is implemented for timer
   useEffect(() => {
+    let id = null;
+
     if (isLoading) {
-      const id = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+      id = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            toast.info(
+              "Kindly give us an extra 30 seconds to process your README"
+            );
+            return 30;
+          }
+          return prevTimer - 1;
+        });
       }, 1000);
       setIntervalId(id);
     }
 
-    // If time runs out and request is still in progress, extend the timer by 30 seconds
-    if (timer === 0 && isLoading) {
-      toast.info(
-        "Kindly give us an extra 30 seconds to process your documentation"
-      );
-      setTimer(30);
-    }
-
     return () => {
-      clearInterval(intervalId);
+      if (id) clearInterval(id);
     };
   }, [isLoading]);
 
@@ -60,8 +55,13 @@ const GenerateReadme = () => {
       return;
     }
 
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+
     setIsLoading(true);
-    setTimer(120);
+    setTimer(10);
 
     try {
       const response = await fetch(
@@ -82,22 +82,26 @@ const GenerateReadme = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch");
       }
+
       const data = await response.json();
       setReadmeContent(data.readme);
-      setIsLoading(false);
-      if (readmeRef.current) {
-        readmeRef.current.onload = () => {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
-          });
-        };
-      }
-      notifySuccess("README generated successfully!");
+      notifySuccess();
+
+      setTimeout(() => {
+        const element = document.getElementById("readme-section");
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
     } catch (error) {
-      setIsLoading(false);
       notifyCatchError(error.message);
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+      if (intervalId) {
+        clearInterval(intervalId);
+        setIntervalId(null);
+      }
     }
   };
 
@@ -166,7 +170,7 @@ const GenerateReadme = () => {
 
       {readmeContent && (
         <section
-          ref={readmeRef}
+          id="readme-section"
           className="bg-white text-black m-10 p-10 rounded-lg shadow-md mt-10"
         >
           <article className="flex justify-between items-center mb-4">

@@ -1,28 +1,26 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import Nav from "./Nav";
+import DocsIcons from "./components/DocsIcons";
+import RepoInsight from "../pages/RepoInsight";
+import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../utils/authContext";
+import InsightIcon from "./components/InsightIcon";
 import { validateGithubUrl } from "../utils/helpers";
 import { ToastContainer, toast } from "react-toastify";
-import { AuthContext } from "../utils/authContext";
-import { formatTime } from "../utils/helpers";
-import Spinner from "./components/Spinner";
-import InsightIcon from "./components/InsightIcon";
-import DocsIcons from "./components/DocsIcons";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import GenerateDocumentation from "./components/GenerateDocumentation";
-import RepoInsight from "../pages/RepoInsight";
-import Nav from "./Nav";
-import "react-toastify/dist/ReactToastify.css";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 
 const Header = () => {
   const iframeRef = useRef(null);
-  const [repoUrl, setRepoUrl] = useState("");
+  const [timer, setTimer] = useState(120);
   const [pdfUrl, setPdfUrl] = useState("");
+  const [repoUrl, setRepoUrl] = useState("");
+  const [active, setActive] = useState("docs");
   const [userRepos, setUserRepos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isRepoLoading, setIsRepoLoading] = useState(false);
-  const [timer, setTimer] = useState(120);
   const [intervalId, setIntervalId] = useState(null);
+  const [isRepoLoading, setIsRepoLoading] = useState(false);
   const { isAuthenticated, user } = useContext(AuthContext);
-  const [active, setActive] = useState("docs");
 
   const notifyError = () => toast.warn("Enter a valid URL!");
   const notifyCatchError = (error) => toast.warn(error);
@@ -31,33 +29,41 @@ const Header = () => {
 
   // useEffect is implemented for timer
   useEffect(() => {
+    let id = null;
+
     if (isLoading) {
-      const id = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+      id = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            toast.info(
+              "Kindly give us an extra 30 seconds to process your documentation"
+            );
+            return 30;
+          }
+          return prevTimer - 1;
+        });
       }, 1000);
       setIntervalId(id);
     }
 
-    // If time runs out and request is still in progress, extend the timer by 30 seconds
-    if (timer === 0 && isLoading) {
-      toast.info(
-        "Kindly give us an extra 30 seconds to process your documentation"
-      );
-      setTimer(30);
-    }
-
     return () => {
-      clearInterval(intervalId);
+      if (id) clearInterval(id);
     };
   }, [isLoading]);
 
   // function to generate documentation
   const handleRepoUrl = (e) => {
     e.preventDefault();
+
     const result = validateGithubUrl(repoUrl);
     if (!result.valid) {
       notifyError();
       return;
+    }
+
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
     }
 
     setIsLoading(true);
