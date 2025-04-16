@@ -61,6 +61,7 @@ const GenerateReadme = () => {
     }
 
     setIsLoading(true);
+    setTimer(120);
 
     try {
       const response = await fetch(
@@ -83,6 +84,7 @@ const GenerateReadme = () => {
       }
       const data = await response.json();
       setReadmeContent(data.readme);
+      setIsLoading(false);
       if (readmeRef.current) {
         readmeRef.current.onload = () => {
           window.scrollTo({
@@ -93,10 +95,9 @@ const GenerateReadme = () => {
       }
       notifySuccess("README generated successfully!");
     } catch (error) {
+      setIsLoading(false);
       notifyCatchError(error.message);
       console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
